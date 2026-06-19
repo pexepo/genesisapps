@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="g" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a78bfa"/>
+      <stop offset="0.5" stop-color="#7c5cff"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <path id="spark" d="M0,-1 Q0.16,-0.16 1,0 Q0.16,0.16 0,1 Q-0.16,0.16 -1,0 Q-0.16,-0.16 0,-1 Z"/>
+  </defs>
+  <use href="#spark" transform="translate(34 28) scale(17)" fill="url(#g)"/>
+  <use href="#spark" transform="translate(19 42) scale(10)" fill="url(#g)"/>
+  <use href="#spark" transform="translate(45 13) scale(6.5)" fill="url(#g)"/>
+</svg>

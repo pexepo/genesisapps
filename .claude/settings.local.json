@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Force | Select-Object Mode, Length, Name; \"---python---\"; \\(Get-Command python -ErrorAction SilentlyContinue\\).Source; \\(Get-Command py -ErrorAction SilentlyContinue\\).Source)",
+      "PowerShell(python -m py_compile bot.py; if \\($?\\) { \"OK: bot.py compiles\" })",
+      "Bash(grep -nE '^#{1,3} ' /Users/pexepo/Downloads/ezezez/README.md)",
+      "Bash(cp gsslogo.ai /tmp/gsslogo.pdf)",
+      "Bash(sips -s format png /tmp/gsslogo.pdf --out /tmp/gsslogo.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight -g hasAlpha /tmp/gsslogo.png)",
+      "Bash(mkdir -p web/assets)",
+      "Bash(sips -Z 640 -s format png /tmp/gsslogo.png --out web/assets/genesis-logo.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight web/assets/genesis-logo.png)",
+      "Bash(./.venv/bin/python -c \"import PIL, PIL.Image; print\\('PIL', PIL.__version__\\)\")",
+      "Bash(python3 -c \"import PIL, PIL.Image; print\\('PIL', PIL.__version__\\)\")",
+      "Bash(python3 -m py_compile bot.py)",
+      "Bash(node --check web/assets/app.js)",
+      "Bash(python3 -c \"import xml.dom.minidom,sys; xml.dom.minidom.parse\\('web/assets/favicon.svg'\\); print\\('favicon.svg: well-formed XML'\\)\")",
+      "Bash(python3 -)",
+      "Read(//Applications/Python 3.14/**)",
+      "Bash(/Library/Frameworks/Python.framework/Versions/3.14/bin/python3 -c \"import ssl; p=ssl.get_default_verify_paths\\(\\); print\\('cafile =', p.cafile\\); print\\('openssl_cafile =', p.openssl_cafile\\)\")",
+      "Read(//Library/Frameworks/Python.framework/Versions/3.14/etc/openssl/**)",
+      "Bash(/Users/pexepo/.venv/bin/python -c \"import certifi; print\\('certifi есть:', certifi.where\\(\\)\\)\")",
+      "Bash(/Users/pexepo/.venv/bin/python -c \"import os; import bot; print\\('SSL_CERT_FILE =', os.environ.get\\('SSL_CERT_FILE'\\)\\)\")",
+      "Bash(/Users/pexepo/.venv/bin/python -)",
+      "PowerShell($node = \\(Get-Command node -ErrorAction SilentlyContinue\\); if \\($node\\) { node --check web\\\\assets\\\\app.js; if \\($?\\) { Write-Output \"JS_OK app.js parses\" } } else { Write-Output \"node not installed\" })",
+      "PowerShell(Get-Command *)",
+      "PowerShell(if \\(Test-Path .gitignore\\) { Write-Output \"=== .gitignore EXISTS ===\"; Get-Content .gitignore } else { Write-Output \"NO .gitignore\" }; echo \"---ENV SIZE---\"; if \\(Test-Path .env\\) { \\(Get-Item .env\\).Length; Write-Output \"env first line keys:\"; Get-Content .env | ForEach-Object { \\($_ -split '='\\)[0] } })",
+      "PowerShell(winget install *)",
+      "PowerShell($git = \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\"; if \\(-not \\(Test-Path $git\\)\\) { $git = \"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" }; & $git --version; echo \"---USERCFG---\"; & $git config --global user.name; & $git config --global user.email)",
+      "PowerShell(Out-Null *)"
+    ]
+  }
+}
