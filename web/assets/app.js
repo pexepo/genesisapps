@@ -8,7 +8,9 @@
 
   const I18N = {
     ru: {
-      "tagline": "Юнит эдиторов. Покажи свой стиль — и присоединяйся к новому поколению.",
+      "hero.eyebrow": "PRIVATE APPLICATIONS / 2026",
+      "hero.status": "Приём заявок открыт",
+      "tagline": "Независимый юнит визуальных авторов. Покажи не тренд — покажи свой почерк.",
       "aside.foot": "Заявки проверяются вручную",
       "steps.1": "Личность",
       "steps.2": "Творчество",
@@ -22,8 +24,13 @@
       "s3.sub": "Дай нам взглянуть на твои работы.",
       "s4.title": "Почти готово",
       "s4.sub": "Проверь данные перед отправкой.",
-      "f.discord.label": "Discord-юзернейм",
-      "f.discord.hint": "Твой хэндл, например kqunix — по нему мы выдаём роль.",
+      "f.discord.label": "Discord-аккаунт",
+      "f.discord.hint": "Подтверди аккаунт через Discord — без ручного ввода и ошибок.",
+      "auth.checking": "Проверяем подключение Discord",
+      "auth.title": "Discord не подключён",
+      "auth.sub": "Безопасный вход только для подтверждения твоего ID.",
+      "auth.button": "Войти через Discord",
+      "auth.connected": "Подключено как",
       "f.software.label": "Программа для эдитинга",
       "f.software.hint": "Выбери одну или две — или укажи свою.",
       "f.software.other": "Другое",
@@ -43,9 +50,21 @@
       "nav.next": "Далее",
       "nav.submit": "Отправить заявку",
       "nav.submitting": "Отправляем…",
+      "done.kicker": "GENESIS // RECEIVED",
       "done.title": "Заявка отправлена!",
-      "done.sub": "Мы получили твою анкету. Ревьюеры свяжутся с тобой в Discord.",
-      "done.again": "Отправить ещё одну",
+      "done.sub": "Команда получила твою работу. Новую заявку можно будет отправить через 24 часа.",
+      "failure.kicker": "GENESIS // ERROR",
+      "failure.close": "Вернуться к заявке",
+      "failure.auth.title": "Подключи Discord",
+      "failure.auth.text": "Сессия истекла или аккаунт не подключён. Войди через Discord и повтори отправку.",
+      "failure.limit.title": "Заявка уже подана",
+      "failure.limit.text": "С одного Discord-аккаунта или IP можно отправить только одну заявку за 24 часа.",
+      "failure.spam.title": "Слишком много попыток",
+      "failure.spam.text": "За короткое время пришло слишком много запросов с этого IP. Подожди несколько минут и повтори.",
+      "failure.network.title": "Нет связи с сервером",
+      "failure.network.text": "Проверь интернет-соединение и попробуй отправить заявку ещё раз.",
+      "failure.generic.title": "Не удалось отправить",
+      "failure.generic.text": "Что-то пошло не так. Проверь соединение и попробуй снова.",
       "legal": "Отправляя заявку, ты соглашаешься, что указанные данные будут переданы команде джаджей Genesis для рассмотрения.",
       "foot.server": "Discord-сервер юнита",
       "foot.styles": "Правила заявок",
@@ -63,7 +82,9 @@
       "error.rate": "Слишком много заявок. Подожди немного и попробуй позже."
     },
     en: {
-      "tagline": "An editors' unit. Show us your style — and join the new generation.",
+      "hero.eyebrow": "PRIVATE APPLICATIONS / 2026",
+      "hero.status": "Applications are open",
+      "tagline": "An independent unit of visual artists. Show us your signature, not a trend.",
       "aside.foot": "Every application is reviewed by hand",
       "steps.1": "Identity",
       "steps.2": "Craft",
@@ -77,8 +98,13 @@
       "s3.sub": "Let us see what you make.",
       "s4.title": "Almost there",
       "s4.sub": "Check your details before sending.",
-      "f.discord.label": "Discord username",
-      "f.discord.hint": "Your handle, e.g. kqunix — used to assign your role.",
+      "f.discord.label": "Discord account",
+      "f.discord.hint": "Verify with Discord — no manual entry and no identity mistakes.",
+      "auth.checking": "Checking Discord connection",
+      "auth.title": "Discord not connected",
+      "auth.sub": "Secure sign-in used only to verify your account ID.",
+      "auth.button": "Continue with Discord",
+      "auth.connected": "Connected as",
       "f.software.label": "Editing software",
       "f.software.hint": "Pick one or two — or enter your own.",
       "f.software.other": "Other",
@@ -98,9 +124,21 @@
       "nav.next": "Next",
       "nav.submit": "Submit application",
       "nav.submitting": "Sending…",
+      "done.kicker": "GENESIS // RECEIVED",
       "done.title": "Application sent!",
-      "done.sub": "We've received your form. Reviewers will reach out on Discord.",
-      "done.again": "Submit another",
+      "done.sub": "The team has received your work. You can submit a new application in 24 hours.",
+      "failure.kicker": "GENESIS // ERROR",
+      "failure.close": "Return to application",
+      "failure.auth.title": "Connect Discord",
+      "failure.auth.text": "Your session expired or Discord is not connected. Sign in and submit again.",
+      "failure.limit.title": "Already submitted",
+      "failure.limit.text": "Only one application per Discord account or IP address is allowed every 24 hours.",
+      "failure.spam.title": "Too many attempts",
+      "failure.spam.text": "This IP sent too many requests in a short period. Wait a few minutes and try again.",
+      "failure.network.title": "Server unreachable",
+      "failure.network.text": "Check your internet connection and try to submit the application again.",
+      "failure.generic.title": "Submission failed",
+      "failure.generic.text": "Something went wrong. Check your connection and try again.",
       "legal": "By submitting, you agree that the information above will be shared with the Genesis judges team for review.",
       "foot.server": "Unit Discord server",
       "foot.styles": "Application rules",
@@ -172,6 +210,83 @@
   const STEP_OF = { discord: 1, software: 1, extra: 1, experience: 2, goal: 2, best: 3, social: 3 };
 
   let current = 1;
+  let authUser = null;
+  let oauthEnabled = null;
+  const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------------- pointer-reactive card border ---------------- */
+
+  (function initCardGlow() {
+    const glowCard = $("#card");
+    if (!glowCard) return;
+
+    const proximity = 52;
+    const inactiveZone = 0.58;
+    let frame = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    function paintGlow() {
+      frame = 0;
+      const rect = glowCard.getBoundingClientRect();
+      const localX = pointerX - rect.left;
+      const localY = pointerY - rect.top;
+      const active = localX > -proximity && localX < rect.width + proximity &&
+        localY > -proximity && localY < rect.height + proximity;
+
+      if (!active) {
+        glowCard.classList.remove("is-glowing");
+        glowCard.style.setProperty("--card-glow-active", "0");
+        return;
+      }
+
+      const distanceFromCenter = Math.hypot(
+        localX - rect.width * 0.5,
+        localY - rect.height * 0.5
+      );
+      const inactiveRadius = Math.min(rect.width, rect.height) * 0.5 * inactiveZone;
+
+      if (distanceFromCenter < inactiveRadius) {
+        glowCard.classList.remove("is-glowing");
+        glowCard.style.setProperty("--card-glow-active", "0");
+        return;
+      }
+
+      glowCard.classList.add("is-glowing");
+      glowCard.style.setProperty("--card-glow-active", "0.9");
+
+      let edgeX = Math.max(0, Math.min(rect.width, localX));
+      let edgeY = Math.max(0, Math.min(rect.height, localY));
+
+      if (localX >= 0 && localX <= rect.width && localY >= 0 && localY <= rect.height) {
+        const edges = [localX, rect.width - localX, localY, rect.height - localY];
+        const nearest = Math.min.apply(Math, edges);
+        if (nearest === edges[0]) edgeX = 0;
+        else if (nearest === edges[1]) edgeX = rect.width;
+        else if (nearest === edges[2]) edgeY = 0;
+        else edgeY = rect.height;
+      }
+
+      glowCard.style.setProperty("--card-glow-x", edgeX.toFixed(1) + "px");
+      glowCard.style.setProperty("--card-glow-y", edgeY.toFixed(1) + "px");
+    }
+
+    function scheduleGlow(e) {
+      if (e) {
+        pointerX = e.clientX;
+        pointerY = e.clientY;
+      }
+      if (frame) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(paintGlow);
+    }
+
+    document.addEventListener("pointermove", scheduleGlow, { passive: true });
+    window.addEventListener("scroll", function () { scheduleGlow(); }, { passive: true });
+    document.documentElement.addEventListener("pointerleave", function () {
+      glowCard.classList.remove("is-glowing");
+      glowCard.style.setProperty("--card-glow-active", "0");
+    });
+  })();
 
   /* ---------------- language ---------------- */
 
@@ -193,6 +308,7 @@
 
     const fc = $("#footContact");
     if (fc) fc.innerHTML = t("foot.contactHtml");
+    paintAuth();
     refreshModalIfOpen();
 
     updateNav();
@@ -201,6 +317,87 @@
 
   $$(".lang-opt").forEach(function (b) {
     b.addEventListener("click", function () { applyLang(b.getAttribute("data-lang"), true); });
+  });
+
+  function paintAuth() {
+    const input = $("#discord");
+    const card = $("#authCard");
+    const title = $("#authTitle");
+    const subtitle = $("#authSubtitle");
+    const login = $("#discordLogin");
+    const profile = $("#discordProfile");
+    const avatar = $("#authAvatar");
+    const glyph = $("#authGlyph");
+    if (!input || !card) return;
+    if (oauthEnabled === null) {
+      card.hidden = false;
+      card.classList.add("is-pending");
+      input.type = "hidden";
+      login.hidden = true;
+      title.textContent = t("auth.checking");
+      subtitle.textContent = t("auth.sub");
+      return;
+    }
+    card.classList.remove("is-pending");
+    if (!oauthEnabled) {
+      card.hidden = true;
+      input.type = "text";
+      input.className = "control auth-fallback";
+      input.placeholder = "Discord username";
+      profile.hidden = true;
+      return;
+    }
+    input.type = "hidden";
+    input.className = "";
+    card.hidden = false;
+    if (authUser) {
+      input.value = authUser.id;
+      title.textContent = t("auth.connected") + " " + (authUser.global_name || authUser.username);
+      subtitle.textContent = "@" + authUser.username;
+      login.hidden = true;
+      card.classList.add("is-connected");
+      profile.textContent = "@" + authUser.username;
+      profile.setAttribute("aria-label", "Disconnect @" + authUser.username);
+      profile.hidden = false;
+      if (avatar && authUser.avatar) {
+        avatar.src = "https://cdn.discordapp.com/avatars/" + authUser.id + "/" + authUser.avatar + ".webp?size=128";
+        avatar.hidden = false;
+        if (glyph) glyph.hidden = true;
+      } else {
+        if (avatar) { avatar.hidden = true; avatar.removeAttribute("src"); }
+        if (glyph) glyph.hidden = false;
+      }
+    } else {
+      input.value = "";
+      title.textContent = t("auth.title");
+      subtitle.textContent = t("auth.sub");
+      login.textContent = t("auth.button");
+      login.hidden = false;
+      card.classList.remove("is-connected");
+      profile.hidden = true;
+      if (avatar) { avatar.hidden = true; avatar.removeAttribute("src"); }
+      if (glyph) glyph.hidden = false;
+    }
+  }
+
+  fetch("/auth/me", { credentials: "same-origin" })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      oauthEnabled = !!data.enabled;
+      authUser = data.user || null;
+      paintAuth();
+      if (new URLSearchParams(window.location.search).get("auth") === "success") {
+        window.history.replaceState({}, "", window.location.pathname);
+      }
+    })
+    // Fail closed: keep verified Discord login visible when auth status cannot
+    // be loaded. Manual usernames are only allowed when the backend explicitly
+    // reports that OAuth is disabled.
+    .catch(function () { oauthEnabled = true; paintAuth(); });
+
+  $("#discordProfile").addEventListener("click", function () {
+    fetch("/auth/logout", { method: "POST", credentials: "same-origin" })
+      .then(function () { authUser = null; paintAuth(); });
   });
 
   /* ---------------- chips: multi-select groups (software / extra) ---------------- */
@@ -306,6 +503,10 @@
   function focusField(k) {
     const f = fieldByKey(k);
     if (!f) return;
+    const wrap = wrapOf(k);
+    if (wrap && wrap.scrollIntoView) {
+      try { wrap.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" }); } catch (e) {}
+    }
     if (f.chips) {
       const other = $("#" + k + "_other");
       if (other && !other.hidden) { try { other.focus({ preventScroll: true }); } catch (e) {} return; }
@@ -314,7 +515,9 @@
       return;
     }
     const el = $(f.el);
-    if (el && el.focus) { try { el.focus({ preventScroll: true }); } catch (e) {} }
+    if (el && el.type !== "hidden" && el.focus) {
+      try { el.focus({ preventScroll: true }); } catch (e) {}
+    }
   }
 
   function validateStep(n) {
@@ -348,7 +551,7 @@
       li.classList.toggle("is-active", n === current);
       li.classList.toggle("is-done", n < current);
     });
-    stepsFill.style.height = ((current - 1) / (TOTAL - 1)) * 100 + "%";
+    stepsFill.style.width = ((current - 1) / (TOTAL - 1)) * 100 + "%";
     stepsFill.classList.toggle("flowing", current > 1);
     pmFill.style.width = (current / TOTAL) * 100 + "%";
   }
@@ -440,7 +643,8 @@
     FIELDS.forEach(function (f) {
       const v = displayValue(f.key);
       if (!v) return;
-      out.push({ question: t("f." + f.key + ".label"), answer: v });
+      // Discord's review interface is always English, independently of the site locale.
+      out.push({ question: I18N.en["f." + f.key + ".label"], answer: v });
     });
     return out;
   }
@@ -459,7 +663,7 @@
       hp: (form.querySelector('[name="website"]') || {}).value || "",
       lang: lang,
       applicant: displayValue("discord"),
-      form_title: "Genesis — " + (lang === "ru" ? "заявка в юнит" : "unit application"),
+      form_title: "Genesis unit application",
       responses: gatherResponses()
     };
 
@@ -473,9 +677,13 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     }).then(function (res) {
-      if (res.ok) return res.json().catch(function () { return { ok: true }; });
-      if (res.status === 429) throw { kind: "rate" };
-      throw { kind: "generic" };
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (res.ok) return data;
+        if (res.status === 401) throw { kind: "auth" };
+        if (res.status === 429 && data.error === "daily_limit") throw { kind: "limit" };
+        if (res.status === 429) throw { kind: "spam" };
+        throw { kind: "generic" };
+      });
     }).then(function (data) {
       if (data && data.ok === false) throw { kind: "generic" };
       succeed();
@@ -483,37 +691,61 @@
       sending = false;
       submitBtn.classList.remove("is-loading");
       submitBtn.querySelector(".btn-label").textContent = t("nav.submit");
-      if (err && err.kind === "rate") showFormError("error.rate");
-      else if (err instanceof TypeError) showFormError("error.network");
-      else showFormError("error.generic");
+      if (err && err.kind === "auth") showFailure("auth");
+      else if (err && err.kind === "limit") showFailure("limit");
+      else if (err && err.kind === "spam") showFailure("spam");
+      else if (err instanceof TypeError) showFailure("network");
+      else showFailure("generic");
     });
   });
+
+  let resultRevealTimer = null;
+
+  function revealResult(overlay) {
+    const card = $(".result-card", overlay);
+    if (!card) return;
+    card.classList.remove("is-revealed");
+    if (resultRevealTimer) clearTimeout(resultRevealTimer);
+    resultRevealTimer = setTimeout(function () {
+      card.classList.add("is-revealed");
+    }, reducedMotion ? 0 : 2000);
+  }
 
   function succeed() {
     form.hidden = true;
     doneEl.hidden = false;
+    document.body.style.overflow = "hidden";
     stepsEls.forEach(function (li) { li.classList.add("is-done"); li.classList.remove("is-active"); });
-    stepsFill.style.height = "100%";
+    stepsFill.style.width = "100%";
     stepsFill.classList.add("flowing");
     pmFill.style.width = "100%";
+    const media = $("#successMedia");
+    if (media) { media.currentTime = 0; media.play().catch(function () {}); }
+    revealResult(doneEl);
   }
 
-  $("#againBtn").addEventListener("click", function () {
-    form.reset();
-    $$(".chip.is-active").forEach(function (c) { c.classList.remove("is-active"); });
-    $$(".control-inline").forEach(function (i) { i.hidden = true; });
-    $$("[data-chips]").forEach(function (w) {
-      const h = $("#" + w.getAttribute("data-chips"));
-      if (h) h.value = "";
-    });
-    $$(".field.invalid").forEach(function (w) { w.classList.remove("invalid"); });
-    sending = false;
-    submitBtn.classList.remove("is-loading");
-    submitBtn.querySelector(".btn-label").textContent = t("nav.submit");
-    doneEl.hidden = true;
-    form.hidden = false;
-    showStep(1, "back");
+  function showFailure(kind) {
+    const overlay = $("#failure");
+    $("#failureTitle").textContent = t("failure." + kind + ".title");
+    $("#failureText").textContent = t("failure." + kind + ".text");
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+    const media = $("#failureMedia");
+    if (media) { media.currentTime = 0; media.play().catch(function () {}); }
+    revealResult(overlay);
+  }
+  $("#failureClose").addEventListener("click", function () {
+    const overlay = $("#failure");
+    if (resultRevealTimer) clearTimeout(resultRevealTimer);
+    const card = $(".result-card", overlay);
+    if (card) card.classList.remove("is-revealed");
+    overlay.hidden = true;
+    document.body.style.overflow = "";
   });
+  if (new URLSearchParams(window.location.search).get("auth") === "failed") {
+    showFailure("auth");
+    window.history.replaceState({}, "", window.location.pathname);
+  }
 
   /* ---------------- counters ---------------- */
 
@@ -562,124 +794,81 @@
   applyLang(lang, false);
   showStep(1, "fwd");
 
-  /* ---------------- boot splash ---------------- */
+  /* ---------------- cinematic background sequence ---------------- */
 
-  (function boot() {
-    const el = $("#boot");
-    if (!el) return;
+  (function bootSequence() {
+    const boot = $("#boot");
+    const loading = $("#loadingMedia");
+    const zanos = $("#zanosMedia");
+    const loop = $("#loopMedia");
     const sub = $("#bootSub");
+    if (!boot) {
+      document.body.classList.add("is-entered");
+      return;
+    }
+
     if (sub) sub.textContent = (lang === "ru") ? "установка соединения" : "establishing uplink";
-    let hidden = false;
-    function hide() {
-      if (hidden) return;
-      hidden = true;
-      el.classList.add("is-done");
-      setTimeout(function () { el.style.display = "none"; }, 750);
-    }
-    if (document.readyState === "complete") setTimeout(hide, 480);
-    else window.addEventListener("load", function () { setTimeout(hide, 440); });
-    setTimeout(hide, 3500); // safety net, на случай если load не наступит
-  })();
 
-  /* ---------------- starfield ---------------- */
+    let pageReady = document.readyState === "complete";
+    let loadingEnded = reducedMotion || !loading;
+    let entered = false;
+    let loopStarted = false;
 
-  (function starfield() {
-    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const canvas = $("#stars");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    let w = 0, h = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let stars = [];
-    let mouse = { x: 0, y: 0, tx: 0, ty: 0 };
-    let shooting = null, lastShot = 0;
-
-    function resize() {
-      w = window.innerWidth;
-      h = window.innerHeight;
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.min(240, Math.floor((w * h) / 7000));
-      stars = [];
-      for (let i = 0; i < count; i++) {
-        const depth = Math.random();
-        stars.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          r: depth * 1.5 + 0.3,
-          depth: depth,
-          a: Math.random() * 0.5 + 0.2,
-          tw: Math.random() * 0.02 + 0.004,
-          ph: Math.random() * Math.PI * 2,
-          hue: Math.random() < 0.22 ? "212" : null
-        });
+    function startLoop() {
+      if (loopStarted) return;
+      loopStarted = true;
+      if (loop && !reducedMotion) {
+        loop.classList.add("is-active");
+        loop.currentTime = 0;
+        loop.play().catch(function () {});
       }
+      setTimeout(function () {
+        if (zanos) {
+          zanos.classList.remove("is-active");
+          zanos.pause();
+        }
+      }, reducedMotion ? 0 : 900);
     }
 
-    function drawStatic() {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < stars.length; i++) {
-        const s = stars[i];
-        ctx.globalAlpha = s.a;
-        ctx.fillStyle = s.hue ? "hsl(" + s.hue + ",36%,82%)" : "#eef2f8";
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fill();
+    function enter() {
+      if (entered) return;
+      entered = true;
+      document.body.classList.add("is-entered");
+
+      if (zanos && !reducedMotion) {
+        zanos.classList.add("is-active");
+        zanos.currentTime = 0;
+        zanos.play().catch(startLoop);
+      } else {
+        startLoop();
       }
-      ctx.globalAlpha = 1;
+
+      boot.classList.add("is-done");
+      setTimeout(function () { boot.style.display = "none"; }, reducedMotion ? 100 : 1050);
     }
 
-    function frame(ts) {
-      ctx.clearRect(0, 0, w, h);
-      mouse.x += (mouse.tx - mouse.x) * 0.05;
-      mouse.y += (mouse.ty - mouse.y) * 0.05;
-      for (let i = 0; i < stars.length; i++) {
-        const s = stars[i];
-        s.ph += s.tw;
-        const alpha = s.a + Math.sin(s.ph) * 0.25;
-        const ox = mouse.x * s.depth * 22;
-        const oy = mouse.y * s.depth * 22;
-        ctx.globalAlpha = Math.max(0, alpha);
-        if (s.hue) {
-          ctx.shadowBlur = 6; ctx.shadowColor = "hsl(" + s.hue + ",42%,74%)";
-          ctx.fillStyle = "hsl(" + s.hue + ",38%,84%)";
-        } else { ctx.shadowBlur = 0; ctx.fillStyle = "#eef2f8"; }
-        ctx.beginPath();
-        ctx.arc(s.x + ox, s.y + oy, s.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.shadowBlur = 0;
-      ctx.globalAlpha = 1;
-
-      // occasional shooting star
-      if (!shooting && ts - lastShot > 6000 && Math.random() < 0.012) {
-        shooting = { x: Math.random() * w * 0.6, y: Math.random() * h * 0.4, len: 0, life: 0 };
-        lastShot = ts;
-      }
-      if (shooting) {
-        shooting.life += 1;
-        shooting.x += 9; shooting.y += 4.2;
-        shooting.len = Math.min(160, shooting.len + 14);
-        const g = ctx.createLinearGradient(shooting.x - shooting.len, shooting.y - shooting.len * 0.46, shooting.x, shooting.y);
-        g.addColorStop(0, "rgba(200,214,235,0)");
-        g.addColorStop(1, "rgba(222,231,245,0.92)");
-        ctx.strokeStyle = g; ctx.lineWidth = 2; ctx.lineCap = "round";
-        ctx.beginPath();
-        ctx.moveTo(shooting.x - shooting.len, shooting.y - shooting.len * 0.46);
-        ctx.lineTo(shooting.x, shooting.y);
-        ctx.stroke();
-        if (shooting.life > 60 || shooting.x > w || shooting.y > h) shooting = null;
-      }
-      requestAnimationFrame(frame);
+    function maybeEnter() {
+      if (pageReady && loadingEnded) enter();
     }
 
-    window.addEventListener("resize", resize, { passive: true });
-    resize();
-    if (reduce) { drawStatic(); return; }
-    window.addEventListener("mousemove", function (e) {
-      mouse.tx = (e.clientX / w - 0.5) * 2;
-      mouse.ty = (e.clientY / h - 0.5) * 2;
-    }, { passive: true });
-    requestAnimationFrame(frame);
+    if (zanos) {
+      zanos.addEventListener("timeupdate", function () {
+        if (zanos.duration && zanos.duration - zanos.currentTime < 0.7) startLoop();
+      });
+      zanos.addEventListener("ended", startLoop);
+      zanos.addEventListener("error", startLoop);
+    }
+
+    if (loading && !reducedMotion) {
+      loading.addEventListener("ended", function () { loadingEnded = true; maybeEnter(); });
+      loading.addEventListener("error", function () { loadingEnded = true; maybeEnter(); });
+      loading.play().catch(function () { loadingEnded = true; maybeEnter(); });
+    }
+
+    if (!pageReady) {
+      window.addEventListener("load", function () { pageReady = true; maybeEnter(); }, { once: true });
+    }
+    maybeEnter();
+    setTimeout(enter, reducedMotion ? 250 : 9000);
   })();
 })();

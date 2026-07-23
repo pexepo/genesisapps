@@ -15,18 +15,24 @@ Google Forms ─(Apps Script onFormSubmit)─(HTTP POST /submit)─▶ bot.py �
 > 💻 **Как запустить у себя на компьютере с нуля** — пошаговые гайды:
 > **[README-macOS.md](README-macOS.md)** · **[README-Windows.md](README-Windows.md)**.
 > Подключить свой домен: **[README-domain.md](README-domain.md)**.
+> Полный production-деплой на Ubuntu с Cloudflare и исходящим прокси:
+> **[README-Ubuntu-Cloudflare.md](README-Ubuntu-Cloudflare.md)**.
 
 **Как выглядит обработка заявки:**
 
 1. Приходит заявка → создаётся пост с embed и кнопками **Accept** / **Decline**;
    бот **пингует роль судей** `REVIEWER_ROLE_ID`. Кнопки работают только у участников
    с этой ролью.
-2. **Decline** → ветке ставится статус **⛔ Declined** (тег + имя ветки), кнопки гаснут.
+2. **Decline** → ветке ставится тег **Declined**, если он настроен; имя ветки не
+   меняется, кнопки гаснут.
 3. **Accept** → ревьюеру приходит приватное (видно только ему) сообщение с
    4 кнопками ролей.
 4. Ревьюер жмёт одну из 4 кнопок → бот **выдаёт эту роль заявителю** (по его
-   Discord-юзернейму из формы) и вешает на ветку **тег Accepted** — имя ветки
-   при этом не меняется. (**Decline** по-прежнему помечает статус в имени ветки.)
+   подтвержденному Discord ID для сайта или юзернейму из Google Forms), вешает
+   тег Accepted, если он настроен. Имя ветки при Accept и Decline не меняется.
+   Публичное сообщение о решении не раскрывает, кто из ревьюеров нажал кнопку.
+   Первые три кнопки дополнительно выдают `CORE_MEMBER_ROLE_ID`; четвёртая
+   выдаёт только свою `ROLE_CHOICE_4_ID`.
 
 ---
 
@@ -158,6 +164,32 @@ Apps Script работает на серверах Google, поэтому бот
 мастером и анимациями. Открой публичный адрес бота из Шага 3 (или `http://localhost:8080/`
 локально) — увидишь форму. Заявка уходит **напрямую боту** на `POST /apply`, и он сам
 создаёт пост в форум-канале. Google Forms и Apps Script при этом **не нужны**.
+
+### Discord login and daily application limit
+
+The website can verify applicants through Discord OAuth2 instead of asking them
+to type a username. In the Discord Developer Portal, open **OAuth2 → General**,
+add the exact redirect URL (for example
+`https://apply.example.com/auth/callback`), and configure:
+
+```dotenv
+DISCORD_CLIENT_ID=your-application-id
+DISCORD_CLIENT_SECRET=your-oauth-client-secret
+DISCORD_REDIRECT_URI=https://apply.example.com/auth/callback
+SESSION_SECRET=a-separate-long-random-value
+APPLICANT_ROLE_ID=optional-role-issued-on-submit
+APPLICATION_COOLDOWN=86400
+```
+
+When all three `DISCORD_*` OAuth values are set, login is mandatory for website
+applications. The server uses the verified Discord ID for role assignment and
+allows one application per Discord account **and** source IP per 24 hours. The
+limit is persisted in `STATE_FILE`, so restarting the bot does not reset it.
+Only a keyed hash of the IP is stored. Set `TRUST_PROXY=1` only when a trusted
+reverse proxy replaces `X-Forwarded-For`; otherwise clients could spoof their IP.
+
+The bot needs **Manage Roles**, and its server role must be above
+`APPLICANT_ROLE_ID` and every `ROLE_CHOICE_*` role.
 
 **Маршруты HTTP-сервера:**
 
@@ -499,6 +531,8 @@ Google Apps Script стучится к боту **снаружи**, по адр�
 | `REVIEWER_ROLE_ID`   | Роль, которой разрешены кнопки Accept/Decline и выбор роли         |
 | `PING_REVIEWER`      | Пинговать роль судей в новом посте-заявке (1/0, по умолчанию 1)    |
 | `ROLE_CHOICE_1..4_*` | 4 кнопки выбора роли: `_ID` — выдаваемая роль, `_NAME` — подпись   |
+| `CORE_MEMBER_ROLE_ID` | Дополнительная роль для вариантов 1-3; вариант 4 её не получает   |
+| `APPLICANT_ROLE_ID` | Роль, выдаваемая сразу после подтвержденной заявки с сайта          |
 | `ACCEPTED_TAG_ID` / `DECLINED_TAG_ID` | Форум-теги статуса (необязательно)                |
 | `DEFAULT_TAG_IDS`    | Теги, вешаемые на каждый новый пост (через запятую)               |
 | `EMBED_*`            | Внешний вид поста-заявки (см. раздел «Кастом embed»)              |
@@ -507,6 +541,7 @@ Google Apps Script стучится к боту **снаружи**, по адр�
 | `STATE_FILE`         | Файл состояния (дедуп + работа кнопок после рестарта)             |
 | `APPLY_RATE_MAX` / `APPLY_RATE_WINDOW` | Антиспам сайта: лимит заявок с одного IP и окно (сек) |
 | `APPLY_FORM_TITLE`   | Заголовок поста для заявок с сайта (`/apply`)                     |
+| `OUTBOUND_PROXY` / `PROXY_*` | Необязательный HTTP(S)-прокси для Discord API/Gateway/OAuth |
 
 ---
 

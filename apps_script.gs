@@ -16,8 +16,8 @@
  */
 
 // === НАСТРОЙКИ ===
-var BOT_URL = "https://ducktail-ditto-mumbling.ngrok-free.dev/submit"; // адрес эндпоинта бота
-var SHARED_SECRET = "sukagena"; // тот же, что в .env бота
+var BOT_URL = "https://your-domain.example/submit"; // bot endpoint
+var SHARED_SECRET = "replace-with-the-value-from-dotenv"; // same value as .env
 
 // Чтобы бот мог ВЫДАТЬ роль заявителю, в форме должно быть поле, куда он впишет
 // свой Discord-ЮЗЕРНЕЙМ (хэндл, напр. "ivan" — он уникален) или числовой ID.
@@ -63,7 +63,7 @@ function onFormSubmit(e) {
     response_id: response.getId(),
     form_title: FormApp.getActiveForm().getTitle(),
     timestamp: response.getTimestamp().toISOString(),
-    responder: responderEmail || "Аноним",
+    responder: responderEmail || "Anonymous",
     applicant: applicant,
     responses: responses
   };
