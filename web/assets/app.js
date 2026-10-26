@@ -22,8 +22,8 @@
       "check.ready": "Всё сходится — к заявке ↓",
       "draft.saved": "Черновик сохранён",
       "more.title": "Дополнительные заявки",
-      "more.1.title": "Дополнительная анкета",
-      "more.1.text": "Отдельная форма Genesis в Google Forms.",
+      "more.1.title": "Джадж, лого-мейкер и другие роли",
+      "more.1.text": "Хочешь помогать юниту не только эдитами? Отдельная анкета на роли в команде.",
       "faq.title": "Частые вопросы",
       "faq.1.q": "Нужно ли быть на Discord-сервере?",
       "faq.1.a": "Да. При одобрении бот выдаёт роль на сервере Genesis — если тебя там нет, роль выдать не получится. Зайди заранее.",
@@ -140,8 +140,8 @@
       "check.ready": "All good — go to the application ↓",
       "draft.saved": "Draft saved",
       "more.title": "Additional applications",
-      "more.1.title": "Additional form",
-      "more.1.text": "A separate Genesis form on Google Forms.",
+      "more.1.title": "Judge, logo maker and other roles",
+      "more.1.text": "Want to help the unit beyond edits? A separate form for team roles.",
       "faq.title": "FAQ",
       "faq.1.q": "Do I need to be on the Discord server?",
       "faq.1.a": "Yes. When you're accepted, the bot gives you a role on the Genesis server — it can't if you're not there. Join beforehand.",
@@ -286,7 +286,7 @@
   const reviewEl = $("#review");
   const TOTAL = 4;
   // Ссылка на дополнительную анкету в Google Forms; пусто — блок скрыт.
-  const EXTRA_FORM_URL = "";
+  const EXTRA_FORM_URL = "https://forms.gle/U79PM5t4L83gVRup8";
 
   const FIELDS = [
     { key: "discord", el: "#discord", required: true, type: "discord" },
