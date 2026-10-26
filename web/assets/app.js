@@ -945,8 +945,9 @@
           if (o.banner) {
             banner.style.backgroundImage = "url(\"" + o.banner + "\")";
             card.classList.add("has-banner");
-          } else if (o.accent) {
-            banner.style.backgroundColor = o.accent;
+          } else if (/^#[0-9a-f]{6}$/i.test(o.accent || "")) {
+            // Profile accent as a tint over graphite: a flat light accent would break the palette.
+            banner.style.backgroundImage = "linear-gradient(160deg, " + o.accent + "59, transparent 75%)";
           }
         });
       })
