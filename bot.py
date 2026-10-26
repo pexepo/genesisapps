@@ -382,9 +382,9 @@ class ReviewView(discord.ui.View):
 # Перевод сообщений (контекстное меню «Translate / Перевести»)
 # ----------------------------------------------------------------------------
 
-# shortcut: неофициальный бесключевой эндпоинт Google, может начать отдавать капчу
-# при большом объёме; если перестанет работать — перейти на DeepL API Free по ключу.
-TRANSLATE_URL = "https://translate.googleapis.com/translate_a/single"
+# shortcut: неофициальный бесключевой эндпоинт Google (translate.googleapis.com
+# отвечает 429 на HTTP/1.1 от aiohttp), может начать отдавать капчу при большом объёме; если перестанет работать — перейти на DeepL API Free по ключу.
+TRANSLATE_URL = "https://clients5.google.com/translate_a/t"
 TRANSLATE_MAX_INPUT = 4000
 
 
@@ -406,14 +406,16 @@ def message_text(message: discord.Message) -> str:
 
 
 def parse_translation(data) -> str:
-    return "".join(chunk[0] for chunk in data[0] if chunk and chunk[0])
+    # Ответ: [["перевод", "исходный_язык"]] (или ["перевод"], если язык задан явно)
+    first = data[0]
+    return first[0] if isinstance(first, list) else first
 
 
 async def translate_text(text: str, target: str) -> str:
     async with ClientSession() as session:
         async with session.post(
             TRANSLATE_URL,
-            params={"client": "gtx", "sl": "auto", "tl": target, "dt": "t"},
+            params={"client": "dict-chrome-ex", "sl": "auto", "tl": target},
             data={"q": text[:TRANSLATE_MAX_INPUT]},
             proxy=OUTBOUND_PROXY,
             proxy_auth=PROXY_AUTH,
