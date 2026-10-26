@@ -10,7 +10,8 @@ Nginx terminates HTTP(S) and proxies to `bot.py` on `127.0.0.1:8080`. The bot re
 - `/var/lib/genesis/submissions.json` — application state (cooldowns, thread statuses).
 - `/opt/genesis/venv` — Python dependencies.
 - `genesis.service` — systemd, user `genesis`, restarts on failure.
-- `/etc/nginx/sites-available/genesis` — server block; ACME webroot `/var/www/genesis-acme`.
+- `/etc/nginx/sites-available/genesis` — server block; ACME webroot `/var/www/genesis-acme`. Nginx is 1.24: use `listen 443 ssl http2`, not `http2 on`.
+- Let's Encrypt cert `genesisunitapps.lol` (webroot), renewed by `certbot.timer`; the shared deploy hook reloads nginx. DNS is in Cloudflare (grey cloud); `www` has no record yet.
 
 SSH: `ssh -i ~/.ssh/oskolok_deploy_ed25519 -o IdentitiesOnly=yes root@185.166.153.240`.
 
