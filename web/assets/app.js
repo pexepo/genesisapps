@@ -8,6 +8,33 @@
 
   const I18N = {
     ru: {
+      "nav.faq": "FAQ",
+      "how.kicker": "01 — Отбор",
+      "styles.kicker": "02 — Правила",
+      "apply.kicker": "03 — Заявка",
+      "more.kicker": "04 — Другие заявки",
+      "faq.kicker": "05 — Вопросы",
+      "check.title": "Проверь себя перед заявкой",
+      "check.1": "Эдит длиннее 7 секунд",
+      "check.2": "Работа моя — не ремейк и не копия чужого стиля",
+      "check.3": "Сделана за последние 3 месяца",
+      "check.go": "Отметь пункты выше",
+      "check.ready": "Всё сходится — к заявке ↓",
+      "draft.saved": "Черновик сохранён",
+      "more.title": "Дополнительные заявки",
+      "more.1.title": "Дополнительная анкета",
+      "more.1.text": "Отдельная форма Genesis в Google Forms.",
+      "faq.title": "Частые вопросы",
+      "faq.1.q": "Нужно ли быть на Discord-сервере?",
+      "faq.1.a": "Да. При одобрении бот выдаёт роль на сервере Genesis — если тебя там нет, роль выдать не получится. Зайди заранее.",
+      "faq.2.q": "Как я узнаю результат?",
+      "faq.2.a": "Если заявку примут, у тебя появится роль юнита на сервере. Заявки смотрят вручную, поэтому точного срока нет.",
+      "faq.3.q": "Можно подать заявку ещё раз?",
+      "faq.3.a": "Да, но не чаще одного раза в 24 часа с одного Discord-аккаунта или IP. Лучше вернуться с новой, более сильной работой.",
+      "faq.4.q": "Что значит «реапп»?",
+      "faq.4.a": "Это не отказ навсегда: тебя просят подать заявку позже, когда вырастет уровень или появится новый эдит.",
+      "faq.5.q": "Какую ссылку на работу присылать?",
+      "faq.5.a": "Прямую ссылку на один лучший эдит: TikTok, YouTube, Instagram, Google Drive. Проверь, что видео открывается без входа в аккаунт.",
       "nav.skip": "К заявке",
       "nav.how": "Отбор",
       "nav.rules": "Правила",
@@ -18,7 +45,6 @@
       "fact.2.value": "Вручную",
       "fact.2.label": "каждую работу смотрят джаджи",
       "fact.3.label": "русский и английский",
-      "how.kicker": "GENESIS // ОТБОР",
       "how.title": "Как попасть в юнит",
       "how.1.title": "Войди через Discord",
       "how.1.text": "Подтверждаем аккаунт, чтобы роль пришла именно тебе — без ручного ввода ника.",
@@ -26,7 +52,6 @@
       "how.2.text": "Одна сильная работа скажет больше десяти средних. Свежая, твоя, от 7 секунд.",
       "how.3.title": "Джаджи решают",
       "how.3.text": "Заявка падает в закрытый канал. При одобрении бот сам выдаст роль на сервере.",
-      "apply.kicker": "GENESIS // ЗАЯВКА",
       "apply.title": "Подать заявку",
       "hero.eyebrow": "PRIVATE APPLICATIONS / 2026",
       "hero.status": "Приём заявок открыт",
@@ -90,7 +115,6 @@
       "foot.styles": "Правила заявок",
       "foot.contactHtml": "Связь · Discord: <b>pexepo</b>",
       "styles.title": "Правила подачи заявок",
-      "styles.kicker": "GENESIS // RULES",
       "styles.bodyHtml": "<ol class=\"rules\"><li>Минимальная длина эдита — не менее 7 секунд.</li><li>Ремейки чужих работ и сильное вдохновение другими авторами не допускаются.</li><li>Эдит должен быть новым или сделанным в течение последних 3 месяцев.</li><li>Не расстраивайся, если получил деклайн или реапп!</li></ol>",
       "review.edit": "Изменить",
       "review.empty": "— не указано —",
@@ -102,6 +126,33 @@
       "error.rate": "Слишком много заявок. Подожди немного и попробуй позже."
     },
     en: {
+      "nav.faq": "FAQ",
+      "how.kicker": "01 — Selection",
+      "styles.kicker": "02 — Rules",
+      "apply.kicker": "03 — Application",
+      "more.kicker": "04 — More applications",
+      "faq.kicker": "05 — Questions",
+      "check.title": "Check yourself before applying",
+      "check.1": "The edit is longer than 7 seconds",
+      "check.2": "It's my own work — not a remake or a copied style",
+      "check.3": "Made within the last 3 months",
+      "check.go": "Tick the boxes above",
+      "check.ready": "All good — go to the application ↓",
+      "draft.saved": "Draft saved",
+      "more.title": "Additional applications",
+      "more.1.title": "Additional form",
+      "more.1.text": "A separate Genesis form on Google Forms.",
+      "faq.title": "FAQ",
+      "faq.1.q": "Do I need to be on the Discord server?",
+      "faq.1.a": "Yes. When you're accepted, the bot gives you a role on the Genesis server — it can't if you're not there. Join beforehand.",
+      "faq.2.q": "How will I know the result?",
+      "faq.2.a": "If you're accepted, the unit role appears on your profile on the server. Applications are reviewed by hand, so there's no fixed deadline.",
+      "faq.3.q": "Can I apply again?",
+      "faq.3.a": "Yes, but at most once every 24 hours per Discord account or IP. It's better to come back with a new, stronger edit.",
+      "faq.4.q": "What does \u201creapp\u201d mean?",
+      "faq.4.a": "It's not a permanent no: you're asked to apply again later, once your level grows or you have a new edit.",
+      "faq.5.q": "What link should I send?",
+      "faq.5.a": "A direct link to your single best edit: TikTok, YouTube, Instagram, Google Drive. Make sure it opens without signing in.",
       "nav.skip": "Skip to application",
       "nav.how": "Selection",
       "nav.rules": "Rules",
@@ -112,7 +163,6 @@
       "fact.2.value": "By hand",
       "fact.2.label": "judges review every edit",
       "fact.3.label": "Russian and English",
-      "how.kicker": "GENESIS // SELECTION",
       "how.title": "How to get in",
       "how.1.title": "Sign in with Discord",
       "how.1.text": "We verify your account so the role lands on you — no typing usernames.",
@@ -120,7 +170,6 @@
       "how.2.text": "One strong piece says more than ten average ones. Fresh, yours, 7 seconds or longer.",
       "how.3.title": "Judges decide",
       "how.3.text": "Your application goes to a private channel. If accepted, the bot gives you the role.",
-      "apply.kicker": "GENESIS // APPLICATION",
       "apply.title": "Apply to Genesis",
       "hero.eyebrow": "PRIVATE APPLICATIONS / 2026",
       "hero.status": "Applications are open",
@@ -184,7 +233,6 @@
       "foot.styles": "Application rules",
       "foot.contactHtml": "Contact · Discord: <b>pexepo</b>",
       "styles.title": "Application rules",
-      "styles.kicker": "GENESIS // RULES",
       "styles.bodyHtml": "<ol class=\"rules\"><li>The minimum edit length is 7 seconds.</li><li>Remakes of others' work and heavy inspiration from other authors are not allowed.</li><li>The edit must be new — or made within the last 3 months.</li><li>Don't be upset if you get a decline or a reapp!</li></ol>",
       "review.edit": "Edit",
       "review.empty": "— not provided —",
@@ -237,6 +285,8 @@
   const doneEl = $("#done");
   const reviewEl = $("#review");
   const TOTAL = 4;
+  // Ссылка на дополнительную анкету в Google Forms; пусто — блок скрыт.
+  const EXTRA_FORM_URL = "";
 
   const FIELDS = [
     { key: "discord", el: "#discord", required: true, type: "discord" },
@@ -277,6 +327,7 @@
     const other = $("#software_other");
     if (other) other.placeholder = t("f.software.otherLabel");
     paintAuth();
+    paintCheck();
 
     updateNav();
     if (current === TOTAL) buildReview();
@@ -367,6 +418,79 @@
       .then(function () { authUser = null; paintAuth(); });
   });
 
+  /* ---------------- readiness checklist ---------------- */
+
+  const checkBoxes = $$("#check input[type=checkbox]");
+  function paintCheck() {
+    const done = checkBoxes.filter(function (c) { return c.checked; }).length;
+    const all = done === checkBoxes.length;
+    const count = $("#checkCount");
+    const go = $("#checkGo");
+    if (count) count.textContent = done + " / " + checkBoxes.length;
+    if (go) {
+      go.textContent = t(all ? "check.ready" : "check.go");
+      go.classList.toggle("is-ready", all);
+    }
+    const box = $("#check");
+    if (box) box.classList.toggle("is-ready", all);
+  }
+  checkBoxes.forEach(function (c) { c.addEventListener("change", paintCheck); });
+
+  /* ---------------- draft autosave ---------------- */
+
+  const DRAFT_KEY = "genesis_draft";
+  const DRAFT_INPUTS = ["experience", "goal", "best", "social", "software_other", "extra_other"];
+  const DRAFT_CHIPS = ["software", "extra"];
+  let draftTimer = null;
+
+  function saveDraft() {
+    const data = { inputs: {}, chips: {} };
+    DRAFT_INPUTS.forEach(function (id) { const el = $("#" + id); if (el) data.inputs[id] = el.value; });
+    DRAFT_CHIPS.forEach(function (name) {
+      data.chips[name] = $$('[data-chips="' + name + '"] .chip.is-active').map(function (c) {
+        return c.getAttribute("data-val");
+      });
+    });
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e) { return; }
+    const note = $("#draftNote");
+    if (note) {
+      const d = new Date();
+      note.textContent = t("draft.saved") + " · " + d.toTimeString().slice(0, 5);
+      note.hidden = false;
+    }
+  }
+  function scheduleDraft() {
+    clearTimeout(draftTimer);
+    draftTimer = setTimeout(saveDraft, 400);
+  }
+  function restoreDraft() {
+    let data;
+    try { data = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); } catch (e) { data = null; }
+    if (!data) return;
+    DRAFT_INPUTS.forEach(function (id) {
+      const el = $("#" + id);
+      if (el && typeof (data.inputs || {})[id] === "string") el.value = data.inputs[id];
+    });
+    DRAFT_CHIPS.forEach(function (name) {
+      const vals = (data.chips || {})[name] || [];
+      $$('[data-chips="' + name + '"] .chip').forEach(function (c) {
+        const on = vals.indexOf(c.getAttribute("data-val")) !== -1;
+        c.classList.toggle("is-active", on);
+        if (c.getAttribute("data-val") === "__other") {
+          const other = $("#" + name + "_other");
+          if (other) other.hidden = !on;
+        }
+      });
+    });
+  }
+  function clearDraft() {
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+  }
+  form.addEventListener("input", scheduleDraft);
+  form.addEventListener("click", function (e) {
+    if (e.target && e.target.closest && e.target.closest(".chip")) scheduleDraft();
+  });
+
   /* ---------------- chips: multi-select groups (software / extra) ---------------- */
 
   function setupChips(name) {
@@ -414,7 +538,9 @@
       });
     });
     if (other) other.addEventListener("input", rebuild);
+    rebuild();
   }
+  restoreDraft();
   setupChips("software");
   setupChips("extra");
 
@@ -679,6 +805,7 @@
   }
 
   function succeed() {
+    clearDraft();
     form.hidden = true;
     doneEl.hidden = false;
     document.body.style.overflow = "hidden";
@@ -729,11 +856,29 @@
   applyLang(lang, false);
   showStep(1, "init");
 
-  /* ---------------- hero background loop ---------------- */
+  /* ---------------- extra applications (Google Forms) ---------------- */
 
-  (function startHeroLoop() {
-    const loop = $("#loopMedia");
-    if (!loop || reducedMotion) return;
-    loop.play().catch(function () {});
+  (function initExtraForm() {
+    const link = $("#extraForm");
+    const section = $("#more");
+    if (!link || !section || !EXTRA_FORM_URL) return;
+    link.href = EXTRA_FORM_URL;
+    section.hidden = false;
+  })();
+
+  /* ---------------- hero timecode ---------------- */
+
+  (function initTimecode() {
+    const el = $("#timecode");
+    if (!el || reducedMotion) return;
+    const start = Date.now();
+    function pad(n) { return n < 10 ? "0" + n : String(n); }
+    setInterval(function () {
+      if (document.hidden) return;
+      const ms = Date.now() - start;
+      const s = Math.floor(ms / 1000);
+      el.textContent = pad(Math.floor(s / 3600)) + ":" + pad(Math.floor(s / 60) % 60) + ":" +
+        pad(s % 60) + ":" + pad(Math.floor((ms % 1000) / (1000 / 24)));
+    }, 1000 / 24);
   })();
 })();
