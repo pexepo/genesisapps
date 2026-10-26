@@ -4,48 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
-  <meta name="theme-color" content="#05070b" />
+  <meta name="theme-color" content="#07060c" />
   <title>Genesis | Unit application</title>
   <meta name="description" content="Apply to join Genesis, an independent unit of visual artists and editors." />
+  <meta property="og:title" content="Genesis — unit application" />
+  <meta property="og:description" content="An independent unit of visual artists and editors. Applications are open." />
+  <meta property="og:image" content="/assets/loop-poster.jpg" />
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/assets/genesis-logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/assets/styles.css?v=20260724" />
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/styles.css?v=20261026" />
 </head>
 <body>
-  <div class="background-stage" aria-hidden="true">
-    <video class="ambient-video loop-video" id="loopMedia" muted playsinline loop preload="metadata" poster="/assets/loop-poster.jpg">
-      <source src="/assets/loop-pingpong.webm" type="video/webm" />
-      <source src="/assets/loop-pingpong.mp4" type="video/mp4" />
-    </video>
-    <video class="ambient-video intro-video" id="zanosMedia" muted playsinline preload="auto" poster="/assets/loop-poster.jpg">
-      <source src="/assets/zanos.webm" type="video/webm" />
-      <source src="/assets/zanos.mp4" type="video/mp4" />
-    </video>
-    <div class="background-grade"></div>
-  </div>
-
-  <div id="boot" class="boot" role="status" aria-live="polite" aria-label="Loading Genesis">
-    <video class="boot-media" id="loadingMedia" muted playsinline autoplay preload="auto" poster="/assets/loading-poster.jpg">
-      <source src="/assets/loading.webm" type="video/webm" />
-      <source src="/assets/loading.mp4" type="video/mp4" />
-    </video>
-    <div class="boot-grade"></div>
-    <div class="boot-inner">
-      <span class="logo-mark boot-logo" aria-hidden="true"></span>
-      <div class="boot-word">Genesis</div>
-      <div class="boot-sub" id="bootSub">establishing uplink</div>
-      <div class="boot-bar" aria-hidden="true"><span class="boot-bar-fill"></span></div>
-    </div>
-  </div>
+  <a class="skip" href="#apply" data-i18n="nav.skip"></a>
 
   <header class="topbar">
-    <div class="intake-mark" aria-label="Genesis private intake">
-      <span class="intake-signal"></span>
-      <span>GENESIS // PRIVATE INTAKE</span>
-    </div>
+    <a class="brand" href="#top" aria-label="Genesis">
+      <span class="logo-mark" aria-hidden="true"></span>
+      <span class="brand-word">Genesis</span>
+    </a>
+    <nav class="top-nav" aria-label="Sections">
+      <a href="#how" data-i18n="nav.how"></a>
+      <a href="#rules" data-i18n="nav.rules"></a>
+      <a href="#apply" data-i18n="nav.apply"></a>
+    </nav>
     <div class="top-actions">
       <button type="button" class="discord-profile" id="discordProfile" hidden></button>
       <div class="lang-switch" role="group" aria-label="Language">
@@ -56,212 +40,238 @@
     </div>
   </header>
 
-  <main class="stage">
-    <section class="hero" aria-labelledby="pageTitle">
-      <span class="logo-mark hero-logo" aria-hidden="true"></span>
-      <p class="hero-kicker" data-i18n="hero.eyebrow"></p>
-      <h1 id="pageTitle">Genesis</h1>
-      <p class="tagline" data-i18n="tagline"></p>
-      <div class="hero-status">
-        <span class="status-dot"></span>
-        <span data-i18n="hero.status"></span>
+  <main>
+    <section class="hero" id="top" aria-labelledby="pageTitle">
+      <div class="hero-media" aria-hidden="true">
+        <video class="hero-video" id="loopMedia" muted playsinline loop preload="metadata" poster="/assets/loop-poster.jpg">
+          <source src="/assets/loop-pingpong.webm" type="video/webm" />
+          <source src="/assets/loop-pingpong.mp4" type="video/mp4" />
+        </video>
       </div>
-    </section>
-
-    <section class="card" id="card">
-      <aside class="card-aside" aria-label="Application progress">
-        <ol class="steps" id="steps">
-          <li class="step" data-step="1">
-            <span class="step-dot"><span class="step-num">01</span></span>
-            <span class="step-label" data-i18n="steps.1"></span>
-          </li>
-          <li class="step" data-step="2">
-            <span class="step-dot"><span class="step-num">02</span></span>
-            <span class="step-label" data-i18n="steps.2"></span>
-          </li>
-          <li class="step" data-step="3">
-            <span class="step-dot"><span class="step-num">03</span></span>
-            <span class="step-label" data-i18n="steps.3"></span>
-          </li>
-          <li class="step" data-step="4">
-            <span class="step-dot"><span class="step-num">04</span></span>
-            <span class="step-label" data-i18n="steps.4"></span>
-          </li>
-          <span class="steps-track" aria-hidden="true"><span class="steps-fill" id="stepsFill"></span></span>
-        </ol>
-        <div class="aside-foot">
-          <span>24H / 01 ENTRY</span>
-          <span data-i18n="aside.foot"></span>
+      <div class="hero-inner">
+        <p class="hero-status"><span class="status-dot"></span><span data-i18n="hero.status"></span></p>
+        <h1 id="pageTitle">Genesis</h1>
+        <p class="tagline" data-i18n="tagline"></p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#apply"><span data-i18n="hero.cta"></span><span class="ico" aria-hidden="true">&#8595;</span></a>
+          <a class="btn ghost" href="https://discord.gg/GfVUWdbanx" target="_blank" rel="noopener noreferrer"><span data-i18n="foot.server"></span><span class="ico" aria-hidden="true">&#8599;</span></a>
         </div>
-      </aside>
-
-      <div class="card-main">
-        <div class="progress-mobile" aria-hidden="true"><span class="pm-fill" id="pmFill"></span></div>
-
-        <form id="form" novalidate autocomplete="off">
-          <div class="hp" aria-hidden="true">
-            <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
-          </div>
-
-          <section class="panel" data-panel="1">
-            <header class="panel-head">
-              <span class="panel-kicker" data-i18n="steps.1"></span>
-              <h2 data-i18n="s1.title"></h2>
-              <p data-i18n="s1.sub"></p>
-            </header>
-
-            <div class="field field-static" data-field="discord">
-              <span class="field-title" data-i18n="f.discord.label"></span>
-              <small class="hint" data-i18n="f.discord.hint"></small>
-              <div class="auth-card is-pending" id="authCard">
-                <div class="auth-icon" aria-hidden="true">
-                  <img id="authAvatar" alt="" hidden />
-                  <svg id="authGlyph" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                    <path fill="currentColor" d="M19.5 5.3A16 16 0 0 0 15.4 4l-.5 1.1a14 14 0 0 0-5.8 0L8.6 4a16 16 0 0 0-4.1 1.3C1.9 9.1 1.2 12.8 1.6 16.4a16.7 16.7 0 0 0 5 2.5l1.2-1.7-1.6-.8.4-.3a11.4 11.4 0 0 0 10.8 0l.4.3-1.6.8 1.2 1.7a16.7 16.7 0 0 0 5-2.5c.5-4.2-.9-7.8-2.9-11.1ZM8.9 14.2c-1.2 0-2.1-1-2.1-2.3s.9-2.3 2.1-2.3 2.1 1 2.1 2.3-.9 2.3-2.1 2.3Zm6.2 0c-1.2 0-2.1-1-2.1-2.3s.9-2.3 2.1-2.3 2.1 1 2.1 2.3-.9 2.3-2.1 2.3Z" />
-                  </svg>
-                </div>
-                <div class="auth-copy">
-                  <strong id="authTitle" data-i18n="auth.title"></strong>
-                  <span id="authSubtitle" data-i18n="auth.sub"></span>
-                </div>
-                <a class="btn discord-btn" id="discordLogin" href="/auth/discord" data-i18n="auth.button"></a>
-              </div>
-              <input id="discord" name="discord" type="hidden" />
-              <small class="err" data-err="discord"></small>
-            </div>
-
-            <div class="field field-static" data-field="software">
-              <span class="field-title" data-i18n="f.software.label"></span>
-              <small class="hint" data-i18n="f.software.hint"></small>
-              <div class="chips" data-chips="software" data-max="2" role="group">
-                <button type="button" class="chip" data-val="After Effects">After Effects</button>
-                <button type="button" class="chip" data-val="DaVinci Resolve">DaVinci Resolve</button>
-                <button type="button" class="chip" data-val="Alight Motion">Alight Motion</button>
-                <button type="button" class="chip" data-val="Node Video">Node Video</button>
-                <button type="button" class="chip" data-val="CapCut">CapCut</button>
-                <button type="button" class="chip" data-val="__other" data-i18n="f.software.other"></button>
-              </div>
-              <input class="control control-inline" id="software_other" name="software_other" type="text" placeholder=" " maxlength="60" hidden />
-              <label class="inline-label" for="software_other" data-i18n="f.software.otherLabel"></label>
-              <input type="hidden" id="software" name="software" />
-              <small class="err" data-err="software"></small>
-            </div>
-
-            <div class="field field-static" data-field="extra">
-              <span class="field-title">
-                <span data-i18n="f.extra.label"></span>
-                <span class="opt-tag" data-i18n="f.optional"></span>
-              </span>
-              <small class="hint" data-i18n="f.extra.hint"></small>
-              <div class="chips" data-chips="extra" data-max="2" role="group">
-                <button type="button" class="chip" data-val="Blender">Blender</button>
-                <button type="button" class="chip" data-val="Cinema 4D">Cinema 4D</button>
-                <button type="button" class="chip" data-val="Houdini">Houdini</button>
-                <button type="button" class="chip" data-val="Element 3D">Element 3D</button>
-                <button type="button" class="chip" data-val="__other" data-i18n="f.software.other"></button>
-              </div>
-              <input class="control control-inline" id="extra_other" name="extra_other" type="text" placeholder=" " maxlength="60" hidden />
-              <input type="hidden" id="extra" name="extra" />
-              <small class="err" data-err="extra"></small>
-            </div>
-          </section>
-
-          <section class="panel" data-panel="2" hidden>
-            <header class="panel-head">
-              <span class="panel-kicker" data-i18n="steps.2"></span>
-              <h2 data-i18n="s2.title"></h2>
-              <p data-i18n="s2.sub"></p>
-            </header>
-            <div class="field" data-field="experience">
-              <input class="control" id="experience" name="experience" type="text" placeholder=" " maxlength="120" required />
-              <label for="experience" data-i18n="f.experience.label"></label>
-              <small class="hint" data-i18n="f.experience.hint"></small>
-              <small class="err" data-err="experience"></small>
-            </div>
-            <div class="field" data-field="goal">
-              <textarea class="control" id="goal" name="goal" placeholder=" " maxlength="600" rows="4" required></textarea>
-              <label for="goal" data-i18n="f.goal.label"></label>
-              <div class="row-between">
-                <small class="hint" data-i18n="f.goal.hint"></small>
-                <small class="counter" data-counter="goal">0 / 600</small>
-              </div>
-              <small class="err" data-err="goal"></small>
-            </div>
-          </section>
-
-          <section class="panel" data-panel="3" hidden>
-            <header class="panel-head">
-              <span class="panel-kicker" data-i18n="steps.3"></span>
-              <h2 data-i18n="s3.title"></h2>
-              <p data-i18n="s3.sub"></p>
-            </header>
-            <div class="field" data-field="best">
-              <input class="control" id="best" name="best" type="url" inputmode="url" placeholder=" " maxlength="300" required />
-              <label for="best" data-i18n="f.best.label"></label>
-              <small class="hint" data-i18n="f.best.hint"></small>
-              <small class="err" data-err="best"></small>
-            </div>
-            <div class="field" data-field="social">
-              <input class="control" id="social" name="social" type="url" inputmode="url" placeholder=" " maxlength="300" />
-              <label for="social">
-                <span data-i18n="f.social.label"></span>
-                <span class="opt-tag" data-i18n="f.optional"></span>
-              </label>
-              <small class="hint" data-i18n="f.social.hint"></small>
-              <small class="err" data-err="social"></small>
-            </div>
-          </section>
-
-          <section class="panel" data-panel="4" hidden>
-            <header class="panel-head">
-              <span class="panel-kicker" data-i18n="steps.4"></span>
-              <h2 data-i18n="s4.title"></h2>
-              <p data-i18n="s4.sub"></p>
-            </header>
-            <dl class="review" id="review"></dl>
-          </section>
-
-          <div class="form-nav">
-            <button type="button" class="btn ghost" data-action="back">
-              <span class="ico">&#8592;</span><span data-i18n="nav.back"></span>
-            </button>
-            <span class="nav-spacer"></span>
-            <button type="button" class="btn primary" data-action="next">
-              <span data-i18n="nav.next"></span><span class="ico">&#8594;</span>
-            </button>
-            <button type="submit" class="btn primary submit" data-action="submit" hidden>
-              <span class="btn-label" data-i18n="nav.submit"></span>
-              <span class="spinner" aria-hidden="true"></span>
-            </button>
-          </div>
-          <p class="form-error" id="formError" role="alert" hidden></p>
-        </form>
+        <ul class="hero-facts">
+          <li><b data-i18n="fact.1.value"></b><span data-i18n="fact.1.label"></span></li>
+          <li><b data-i18n="fact.2.value"></b><span data-i18n="fact.2.label"></span></li>
+          <li><b>RU / EN</b><span data-i18n="fact.3.label"></span></li>
+        </ul>
       </div>
     </section>
 
-    <footer class="site-foot">
-      <nav class="foot-links">
-        <a class="foot-link" href="https://discord.gg/GfVUWdbanx" target="_blank" rel="noopener noreferrer">
-          <span class="foot-ico">&#8599;</span><span data-i18n="foot.server"></span>
-        </a>
-        <button type="button" class="foot-link" data-modal="styles">
-          <span class="foot-ico">&#9671;</span><span data-i18n="foot.styles"></span>
-        </button>
-      </nav>
-      <p class="foot-contact" id="footContact"></p>
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>After Effects</span><i>&#10022;</i><span>DaVinci Resolve</span><i>&#10022;</i><span>Alight Motion</span><i>&#10022;</i><span>Node Video</span><i>&#10022;</i><span>CapCut</span><i>&#10022;</i><span>Blender</span><i>&#10022;</i><span>Cinema 4D</span><i>&#10022;</i>
+        <span>After Effects</span><i>&#10022;</i><span>DaVinci Resolve</span><i>&#10022;</i><span>Alight Motion</span><i>&#10022;</i><span>Node Video</span><i>&#10022;</i><span>CapCut</span><i>&#10022;</i><span>Blender</span><i>&#10022;</i><span>Cinema 4D</span><i>&#10022;</i>
+      </div>
+    </div>
+
+    <section class="section" id="how" aria-labelledby="howTitle">
+      <p class="kicker" data-i18n="how.kicker"></p>
+      <h2 id="howTitle" data-i18n="how.title"></h2>
+      <ol class="how">
+        <li><span class="how-num">01</span><h3 data-i18n="how.1.title"></h3><p data-i18n="how.1.text"></p></li>
+        <li><span class="how-num">02</span><h3 data-i18n="how.2.title"></h3><p data-i18n="how.2.text"></p></li>
+        <li><span class="how-num">03</span><h3 data-i18n="how.3.title"></h3><p data-i18n="how.3.text"></p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="rules" aria-labelledby="rulesTitle">
+      <p class="kicker" data-i18n="styles.kicker"></p>
+      <h2 id="rulesTitle" data-i18n="styles.title"></h2>
+      <div class="rules-body" data-i18n-html="styles.bodyHtml"></div>
+    </section>
+
+    <section class="section apply" id="apply" aria-labelledby="applyTitle">
+      <p class="kicker" data-i18n="apply.kicker"></p>
+      <h2 id="applyTitle" data-i18n="apply.title"></h2>
+
+      <div class="card" id="card">
+        <aside class="card-aside" aria-label="Application progress">
+          <ol class="steps" id="steps">
+            <li class="step" data-step="1">
+              <span class="step-dot"><span class="step-num">01</span></span>
+              <span class="step-label" data-i18n="steps.1"></span>
+            </li>
+            <li class="step" data-step="2">
+              <span class="step-dot"><span class="step-num">02</span></span>
+              <span class="step-label" data-i18n="steps.2"></span>
+            </li>
+            <li class="step" data-step="3">
+              <span class="step-dot"><span class="step-num">03</span></span>
+              <span class="step-label" data-i18n="steps.3"></span>
+            </li>
+            <li class="step" data-step="4">
+              <span class="step-dot"><span class="step-num">04</span></span>
+              <span class="step-label" data-i18n="steps.4"></span>
+            </li>
+            <span class="steps-track" aria-hidden="true"><span class="steps-fill" id="stepsFill"></span></span>
+          </ol>
+          <p class="aside-foot" data-i18n="aside.foot"></p>
+        </aside>
+
+        <div class="card-main">
+          <div class="progress-mobile" aria-hidden="true"><span class="pm-fill" id="pmFill"></span></div>
+
+          <form id="form" novalidate autocomplete="off">
+            <div class="hp" aria-hidden="true">
+              <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+            </div>
+
+            <section class="panel" data-panel="1">
+              <header class="panel-head">
+                <span class="panel-kicker" data-i18n="steps.1"></span>
+                <h3 data-i18n="s1.title"></h3>
+                <p data-i18n="s1.sub"></p>
+              </header>
+
+              <div class="field field-static" data-field="discord">
+                <span class="field-title" data-i18n="f.discord.label"></span>
+                <small class="hint" data-i18n="f.discord.hint"></small>
+                <div class="auth-card is-pending" id="authCard">
+                  <div class="auth-icon" aria-hidden="true">
+                    <img id="authAvatar" alt="" hidden />
+                    <svg id="authGlyph" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                      <path fill="currentColor" d="M19.5 5.3A16 16 0 0 0 15.4 4l-.5 1.1a14 14 0 0 0-5.8 0L8.6 4a16 16 0 0 0-4.1 1.3C1.9 9.1 1.2 12.8 1.6 16.4a16.7 16.7 0 0 0 5 2.5l1.2-1.7-1.6-.8.4-.3a11.4 11.4 0 0 0 10.8 0l.4.3-1.6.8 1.2 1.7a16.7 16.7 0 0 0 5-2.5c.5-4.2-.9-7.8-2.9-11.1ZM8.9 14.2c-1.2 0-2.1-1-2.1-2.3s.9-2.3 2.1-2.3 2.1 1 2.1 2.3-.9 2.3-2.1 2.3Zm6.2 0c-1.2 0-2.1-1-2.1-2.3s.9-2.3 2.1-2.3 2.1 1 2.1 2.3-.9 2.3-2.1 2.3Z" />
+                    </svg>
+                  </div>
+                  <div class="auth-copy">
+                    <strong id="authTitle" data-i18n="auth.title"></strong>
+                    <span id="authSubtitle" data-i18n="auth.sub"></span>
+                  </div>
+                  <a class="btn discord-btn" id="discordLogin" href="/auth/discord" data-i18n="auth.button"></a>
+                </div>
+                <input id="discord" name="discord" type="hidden" />
+                <small class="err" data-err="discord"></small>
+              </div>
+
+              <div class="field field-static" data-field="software">
+                <span class="field-title" data-i18n="f.software.label"></span>
+                <small class="hint" data-i18n="f.software.hint"></small>
+                <div class="chips" data-chips="software" data-max="2" role="group">
+                  <button type="button" class="chip" data-val="After Effects">After Effects</button>
+                  <button type="button" class="chip" data-val="DaVinci Resolve">DaVinci Resolve</button>
+                  <button type="button" class="chip" data-val="Alight Motion">Alight Motion</button>
+                  <button type="button" class="chip" data-val="Node Video">Node Video</button>
+                  <button type="button" class="chip" data-val="CapCut">CapCut</button>
+                  <button type="button" class="chip" data-val="__other" data-i18n="f.software.other"></button>
+                </div>
+                <input class="control control-inline" id="software_other" name="software_other" type="text" placeholder=" " maxlength="60" hidden />
+                <label class="inline-label" for="software_other" data-i18n="f.software.otherLabel"></label>
+                <input type="hidden" id="software" name="software" />
+                <small class="err" data-err="software"></small>
+              </div>
+
+              <div class="field field-static" data-field="extra">
+                <span class="field-title">
+                  <span data-i18n="f.extra.label"></span>
+                  <span class="opt-tag" data-i18n="f.optional"></span>
+                </span>
+                <small class="hint" data-i18n="f.extra.hint"></small>
+                <div class="chips" data-chips="extra" data-max="2" role="group">
+                  <button type="button" class="chip" data-val="Blender">Blender</button>
+                  <button type="button" class="chip" data-val="Cinema 4D">Cinema 4D</button>
+                  <button type="button" class="chip" data-val="Houdini">Houdini</button>
+                  <button type="button" class="chip" data-val="Element 3D">Element 3D</button>
+                  <button type="button" class="chip" data-val="__other" data-i18n="f.software.other"></button>
+                </div>
+                <input class="control control-inline" id="extra_other" name="extra_other" type="text" placeholder=" " maxlength="60" hidden />
+                <input type="hidden" id="extra" name="extra" />
+                <small class="err" data-err="extra"></small>
+              </div>
+            </section>
+
+            <section class="panel" data-panel="2" hidden>
+              <header class="panel-head">
+                <span class="panel-kicker" data-i18n="steps.2"></span>
+                <h3 data-i18n="s2.title"></h3>
+                <p data-i18n="s2.sub"></p>
+              </header>
+              <div class="field" data-field="experience">
+                <input class="control" id="experience" name="experience" type="text" placeholder=" " maxlength="120" required />
+                <label for="experience" data-i18n="f.experience.label"></label>
+                <small class="hint" data-i18n="f.experience.hint"></small>
+                <small class="err" data-err="experience"></small>
+              </div>
+              <div class="field" data-field="goal">
+                <textarea class="control" id="goal" name="goal" placeholder=" " maxlength="600" rows="4" required></textarea>
+                <label for="goal" data-i18n="f.goal.label"></label>
+                <div class="row-between">
+                  <small class="hint" data-i18n="f.goal.hint"></small>
+                  <small class="counter" data-counter="goal">0 / 600</small>
+                </div>
+                <small class="err" data-err="goal"></small>
+              </div>
+            </section>
+
+            <section class="panel" data-panel="3" hidden>
+              <header class="panel-head">
+                <span class="panel-kicker" data-i18n="steps.3"></span>
+                <h3 data-i18n="s3.title"></h3>
+                <p data-i18n="s3.sub"></p>
+              </header>
+              <div class="field" data-field="best">
+                <input class="control" id="best" name="best" type="url" inputmode="url" placeholder=" " maxlength="300" required />
+                <label for="best" data-i18n="f.best.label"></label>
+                <small class="hint" data-i18n="f.best.hint"></small>
+                <small class="err" data-err="best"></small>
+              </div>
+              <div class="field" data-field="social">
+                <input class="control" id="social" name="social" type="url" inputmode="url" placeholder=" " maxlength="300" />
+                <label for="social">
+                  <span data-i18n="f.social.label"></span>
+                  <span class="opt-tag" data-i18n="f.optional"></span>
+                </label>
+                <small class="hint" data-i18n="f.social.hint"></small>
+                <small class="err" data-err="social"></small>
+              </div>
+            </section>
+
+            <section class="panel" data-panel="4" hidden>
+              <header class="panel-head">
+                <span class="panel-kicker" data-i18n="steps.4"></span>
+                <h3 data-i18n="s4.title"></h3>
+                <p data-i18n="s4.sub"></p>
+              </header>
+              <dl class="review" id="review"></dl>
+            </section>
+
+            <div class="form-nav">
+              <button type="button" class="btn ghost" data-action="back">
+                <span class="ico" aria-hidden="true">&#8592;</span><span data-i18n="nav.back"></span>
+              </button>
+              <span class="nav-spacer"></span>
+              <button type="button" class="btn primary" data-action="next">
+                <span data-i18n="nav.next"></span><span class="ico" aria-hidden="true">&#8594;</span>
+              </button>
+              <button type="submit" class="btn primary submit" data-action="submit" hidden>
+                <span class="btn-label" data-i18n="nav.submit"></span>
+                <span class="spinner" aria-hidden="true"></span>
+              </button>
+            </div>
+            <p class="form-error" id="formError" role="alert" hidden></p>
+          </form>
+        </div>
+      </div>
       <p class="legal" data-i18n="legal"></p>
-    </footer>
+    </section>
   </main>
 
-  <div class="modal" id="modal" hidden>
-    <div class="modal-scrim" data-close></div>
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button type="button" class="modal-x" data-close aria-label="Close">&#10005;</button>
-      <span class="panel-kicker" id="modalKicker"></span>
-      <h2 id="modalTitle"></h2>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
+  <footer class="site-foot">
+    <a class="brand" href="#top" aria-label="Genesis">
+      <span class="logo-mark" aria-hidden="true"></span>
+      <span class="brand-word">Genesis</span>
+    </a>
+    <p class="foot-contact" data-i18n-html="foot.contactHtml"></p>
+    <a class="foot-link" href="https://discord.gg/GfVUWdbanx" target="_blank" rel="noopener noreferrer">
+      <span data-i18n="foot.server"></span><span aria-hidden="true">&#8599;</span>
+    </a>
+  </footer>
 
   <div class="result-overlay success" id="done" hidden role="status" aria-live="polite">
     <div class="result-card">
@@ -292,6 +302,6 @@
     </div>
   </div>
 
-  <script src="/assets/app.js?v=20260724" defer></script>
+  <script src="/assets/app.js?v=20261026" defer></script>
 </body>
 </html>

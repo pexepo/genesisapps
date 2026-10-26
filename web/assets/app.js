@@ -8,6 +8,26 @@
 
   const I18N = {
     ru: {
+      "nav.skip": "К заявке",
+      "nav.how": "Отбор",
+      "nav.rules": "Правила",
+      "nav.apply": "Заявка",
+      "hero.cta": "Подать заявку",
+      "fact.1.value": "4 шага",
+      "fact.1.label": "≈ 3 минуты на заявку",
+      "fact.2.value": "Вручную",
+      "fact.2.label": "каждую работу смотрят джаджи",
+      "fact.3.label": "русский и английский",
+      "how.kicker": "GENESIS // ОТБОР",
+      "how.title": "Как попасть в юнит",
+      "how.1.title": "Войди через Discord",
+      "how.1.text": "Подтверждаем аккаунт, чтобы роль пришла именно тебе — без ручного ввода ника.",
+      "how.2.title": "Покажи лучший эдит",
+      "how.2.text": "Одна сильная работа скажет больше десяти средних. Свежая, твоя, от 7 секунд.",
+      "how.3.title": "Джаджи решают",
+      "how.3.text": "Заявка падает в закрытый канал. При одобрении бот сам выдаст роль на сервере.",
+      "apply.kicker": "GENESIS // ЗАЯВКА",
+      "apply.title": "Подать заявку",
       "hero.eyebrow": "PRIVATE APPLICATIONS / 2026",
       "hero.status": "Приём заявок открыт",
       "tagline": "Независимый юнит визуальных авторов. Покажи не тренд — покажи свой почерк.",
@@ -71,7 +91,7 @@
       "foot.contactHtml": "Связь · Discord: <b>pexepo</b>",
       "styles.title": "Правила подачи заявок",
       "styles.kicker": "GENESIS // RULES",
-      "styles.bodyHtml": "<ol class=\"rules\"><li>Минимальная длина эдита — не менее 7 секунд.</li><li>Ремейки чужих работ и сильное вдохновение другими авторами не допускаются.</li><li>Эдит должен быть новым или сделанным в течение последних 3 месяцев.</li><li>Не расстраивайся, если получил деклайн или реапп!</li></ol><img class=\"modal-gif\" src=\"/assets/notes.gif\" alt=\"\" loading=\"lazy\" />",
+      "styles.bodyHtml": "<ol class=\"rules\"><li>Минимальная длина эдита — не менее 7 секунд.</li><li>Ремейки чужих работ и сильное вдохновение другими авторами не допускаются.</li><li>Эдит должен быть новым или сделанным в течение последних 3 месяцев.</li><li>Не расстраивайся, если получил деклайн или реапп!</li></ol>",
       "review.edit": "Изменить",
       "review.empty": "— не указано —",
       "err.required": "Заполни это поле",
@@ -82,6 +102,26 @@
       "error.rate": "Слишком много заявок. Подожди немного и попробуй позже."
     },
     en: {
+      "nav.skip": "Skip to application",
+      "nav.how": "Selection",
+      "nav.rules": "Rules",
+      "nav.apply": "Apply",
+      "hero.cta": "Apply now",
+      "fact.1.value": "4 steps",
+      "fact.1.label": "≈ 3 minutes to apply",
+      "fact.2.value": "By hand",
+      "fact.2.label": "judges review every edit",
+      "fact.3.label": "Russian and English",
+      "how.kicker": "GENESIS // SELECTION",
+      "how.title": "How to get in",
+      "how.1.title": "Sign in with Discord",
+      "how.1.text": "We verify your account so the role lands on you — no typing usernames.",
+      "how.2.title": "Show your best edit",
+      "how.2.text": "One strong piece says more than ten average ones. Fresh, yours, 7 seconds or longer.",
+      "how.3.title": "Judges decide",
+      "how.3.text": "Your application goes to a private channel. If accepted, the bot gives you the role.",
+      "apply.kicker": "GENESIS // APPLICATION",
+      "apply.title": "Apply to Genesis",
       "hero.eyebrow": "PRIVATE APPLICATIONS / 2026",
       "hero.status": "Applications are open",
       "tagline": "An independent unit of visual artists. Show us your signature, not a trend.",
@@ -145,7 +185,7 @@
       "foot.contactHtml": "Contact · Discord: <b>pexepo</b>",
       "styles.title": "Application rules",
       "styles.kicker": "GENESIS // RULES",
-      "styles.bodyHtml": "<ol class=\"rules\"><li>The minimum edit length is 7 seconds.</li><li>Remakes of others' work and heavy inspiration from other authors are not allowed.</li><li>The edit must be new — or made within the last 3 months.</li><li>Don't be upset if you get a decline or a reapp!</li></ol><img class=\"modal-gif\" src=\"/assets/notes.gif\" alt=\"\" loading=\"lazy\" />",
+      "styles.bodyHtml": "<ol class=\"rules\"><li>The minimum edit length is 7 seconds.</li><li>Remakes of others' work and heavy inspiration from other authors are not allowed.</li><li>The edit must be new — or made within the last 3 months.</li><li>Don't be upset if you get a decline or a reapp!</li></ol>",
       "review.edit": "Edit",
       "review.empty": "— not provided —",
       "err.required": "This field is required",
@@ -214,80 +254,6 @@
   let oauthEnabled = null;
   const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------------- pointer-reactive card border ---------------- */
-
-  (function initCardGlow() {
-    const glowCard = $("#card");
-    if (!glowCard) return;
-
-    const proximity = 52;
-    const inactiveZone = 0.58;
-    let frame = 0;
-    let pointerX = 0;
-    let pointerY = 0;
-
-    function paintGlow() {
-      frame = 0;
-      const rect = glowCard.getBoundingClientRect();
-      const localX = pointerX - rect.left;
-      const localY = pointerY - rect.top;
-      const active = localX > -proximity && localX < rect.width + proximity &&
-        localY > -proximity && localY < rect.height + proximity;
-
-      if (!active) {
-        glowCard.classList.remove("is-glowing");
-        glowCard.style.setProperty("--card-glow-active", "0");
-        return;
-      }
-
-      const distanceFromCenter = Math.hypot(
-        localX - rect.width * 0.5,
-        localY - rect.height * 0.5
-      );
-      const inactiveRadius = Math.min(rect.width, rect.height) * 0.5 * inactiveZone;
-
-      if (distanceFromCenter < inactiveRadius) {
-        glowCard.classList.remove("is-glowing");
-        glowCard.style.setProperty("--card-glow-active", "0");
-        return;
-      }
-
-      glowCard.classList.add("is-glowing");
-      glowCard.style.setProperty("--card-glow-active", "0.9");
-
-      let edgeX = Math.max(0, Math.min(rect.width, localX));
-      let edgeY = Math.max(0, Math.min(rect.height, localY));
-
-      if (localX >= 0 && localX <= rect.width && localY >= 0 && localY <= rect.height) {
-        const edges = [localX, rect.width - localX, localY, rect.height - localY];
-        const nearest = Math.min.apply(Math, edges);
-        if (nearest === edges[0]) edgeX = 0;
-        else if (nearest === edges[1]) edgeX = rect.width;
-        else if (nearest === edges[2]) edgeY = 0;
-        else edgeY = rect.height;
-      }
-
-      glowCard.style.setProperty("--card-glow-x", edgeX.toFixed(1) + "px");
-      glowCard.style.setProperty("--card-glow-y", edgeY.toFixed(1) + "px");
-    }
-
-    function scheduleGlow(e) {
-      if (e) {
-        pointerX = e.clientX;
-        pointerY = e.clientY;
-      }
-      if (frame) cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(paintGlow);
-    }
-
-    document.addEventListener("pointermove", scheduleGlow, { passive: true });
-    window.addEventListener("scroll", function () { scheduleGlow(); }, { passive: true });
-    document.documentElement.addEventListener("pointerleave", function () {
-      glowCard.classList.remove("is-glowing");
-      glowCard.style.setProperty("--card-glow-active", "0");
-    });
-  })();
-
   /* ---------------- language ---------------- */
 
   function applyLang(next, persist) {
@@ -303,13 +269,14 @@
       el.textContent = t(el.getAttribute("data-i18n"));
     });
 
+    // only our own static strings from I18N go through innerHTML
+    $$("[data-i18n-html]").forEach(function (el) {
+      el.innerHTML = t(el.getAttribute("data-i18n-html"));
+    });
+
     const other = $("#software_other");
     if (other) other.placeholder = t("f.software.otherLabel");
-
-    const fc = $("#footContact");
-    if (fc) fc.innerHTML = t("foot.contactHtml");
     paintAuth();
-    refreshModalIfOpen();
 
     updateNav();
     if (current === TOTAL) buildReview();
@@ -551,7 +518,7 @@
       li.classList.toggle("is-active", n === current);
       li.classList.toggle("is-done", n < current);
     });
-    stepsFill.style.width = ((current - 1) / (TOTAL - 1)) * 100 + "%";
+    stepsFill.style.height = ((current - 1) / (TOTAL - 1)) * 100 + "%";
     stepsFill.classList.toggle("flowing", current > 1);
     pmFill.style.width = (current / TOTAL) * 100 + "%";
   }
@@ -573,7 +540,7 @@
     updateNav();
     hideFormError();
     const first = panels[current - 1].querySelector(".control:not([hidden]), .chip");
-    if (first && first.focus) { try { first.focus({ preventScroll: true }); } catch (e) {} }
+    if (dir !== "init" && first && first.focus) { try { first.focus({ preventScroll: true }); } catch (e) {} }
   }
 
   nextBtn.addEventListener("click", function () { if (validateStep(current)) showStep(current + 1, "fwd"); });
@@ -716,7 +683,7 @@
     doneEl.hidden = false;
     document.body.style.overflow = "hidden";
     stepsEls.forEach(function (li) { li.classList.add("is-done"); li.classList.remove("is-active"); });
-    stepsFill.style.width = "100%";
+    stepsFill.style.height = "100%";
     stepsFill.classList.add("flowing");
     pmFill.style.width = "100%";
     const media = $("#successMedia");
@@ -757,118 +724,16 @@
     el.addEventListener("input", upd); upd();
   });
 
-  /* ---------------- modal (application rules) ---------------- */
-
-  const modal = $("#modal");
-  let modalKey = null;
-
-  function setModalContent(key) {
-    $("#modalKicker").textContent = t(key + ".kicker");
-    $("#modalTitle").textContent = t(key + ".title");
-    $("#modalBody").innerHTML = t(key + ".bodyHtml");
-  }
-  function openModal(key) {
-    modalKey = key;
-    setModalContent(key);
-    modal.hidden = false;
-    document.body.style.overflow = "hidden";
-  }
-  function closeModal() {
-    modal.hidden = true;
-    modalKey = null;
-    document.body.style.overflow = "";
-  }
-  function refreshModalIfOpen() {
-    if (modal && modalKey && !modal.hidden) setModalContent(modalKey);
-  }
-  $$("[data-modal]").forEach(function (b) {
-    b.addEventListener("click", function () { openModal(b.getAttribute("data-modal")); });
-  });
-  $$("[data-close]").forEach(function (el) { el.addEventListener("click", closeModal); });
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && modal && !modal.hidden) closeModal();
-  });
-
   /* ---------------- init (рендерим контент ДО декоративных эффектов) ---------------- */
 
   applyLang(lang, false);
-  showStep(1, "fwd");
+  showStep(1, "init");
 
-  /* ---------------- cinematic background sequence ---------------- */
+  /* ---------------- hero background loop ---------------- */
 
-  (function bootSequence() {
-    const boot = $("#boot");
-    const loading = $("#loadingMedia");
-    const zanos = $("#zanosMedia");
+  (function startHeroLoop() {
     const loop = $("#loopMedia");
-    const sub = $("#bootSub");
-    if (!boot) {
-      document.body.classList.add("is-entered");
-      return;
-    }
-
-    if (sub) sub.textContent = (lang === "ru") ? "установка соединения" : "establishing uplink";
-
-    let pageReady = document.readyState === "complete";
-    let loadingEnded = reducedMotion || !loading;
-    let entered = false;
-    let loopStarted = false;
-
-    function startLoop() {
-      if (loopStarted) return;
-      loopStarted = true;
-      if (loop && !reducedMotion) {
-        loop.classList.add("is-active");
-        loop.currentTime = 0;
-        loop.play().catch(function () {});
-      }
-      setTimeout(function () {
-        if (zanos) {
-          zanos.classList.remove("is-active");
-          zanos.pause();
-        }
-      }, reducedMotion ? 0 : 900);
-    }
-
-    function enter() {
-      if (entered) return;
-      entered = true;
-      document.body.classList.add("is-entered");
-
-      if (zanos && !reducedMotion) {
-        zanos.classList.add("is-active");
-        zanos.currentTime = 0;
-        zanos.play().catch(startLoop);
-      } else {
-        startLoop();
-      }
-
-      boot.classList.add("is-done");
-      setTimeout(function () { boot.style.display = "none"; }, reducedMotion ? 100 : 1050);
-    }
-
-    function maybeEnter() {
-      if (pageReady && loadingEnded) enter();
-    }
-
-    if (zanos) {
-      zanos.addEventListener("timeupdate", function () {
-        if (zanos.duration && zanos.duration - zanos.currentTime < 0.7) startLoop();
-      });
-      zanos.addEventListener("ended", startLoop);
-      zanos.addEventListener("error", startLoop);
-    }
-
-    if (loading && !reducedMotion) {
-      loading.addEventListener("ended", function () { loadingEnded = true; maybeEnter(); });
-      loading.addEventListener("error", function () { loadingEnded = true; maybeEnter(); });
-      loading.play().catch(function () { loadingEnded = true; maybeEnter(); });
-    }
-
-    if (!pageReady) {
-      window.addEventListener("load", function () { pageReady = true; maybeEnter(); }, { once: true });
-    }
-    maybeEnter();
-    setTimeout(enter, reducedMotion ? 250 : 9000);
+    if (!loop || reducedMotion) return;
+    loop.play().catch(function () {});
   })();
 })();
