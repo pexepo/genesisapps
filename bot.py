@@ -378,6 +378,73 @@ class ReviewView(discord.ui.View):
         await self.bot.on_decline(interaction)
 
 
+# ----------------------------------------------------------------------------
+# Перевод сообщений (контекстное меню «Translate / Перевести»)
+# ----------------------------------------------------------------------------
+
+# shortcut: неофициальный бесключевой эндпоинт Google, может начать отдавать капчу
+# при большом объёме; если перестанет работать — перейти на DeepL API Free по ключу.
+TRANSLATE_URL = "https://translate.googleapis.com/translate_a/single"
+TRANSLATE_MAX_INPUT = 4000
+
+
+def translation_target(text: str) -> str:
+    """Русский текст переводим на английский, всё остальное — на русский."""
+    letters = [ch for ch in text if ch.isalpha()]
+    if not letters:
+        return "ru"
+    cyrillic = sum(1 for ch in letters if "а" <= ch.lower() <= "я" or ch.lower() == "ё")
+    return "en" if cyrillic / len(letters) > 0.5 else "ru"
+
+
+def message_text(message: discord.Message) -> str:
+    parts = [message.content or ""]
+    for embed in message.embeds:
+        parts += [embed.title or "", embed.description or ""]
+        parts += [f"{f.name}\n{f.value}" for f in embed.fields]
+    return "\n\n".join(p for p in parts if p.strip()).strip()
+
+
+def parse_translation(data) -> str:
+    return "".join(chunk[0] for chunk in data[0] if chunk and chunk[0])
+
+
+async def translate_text(text: str, target: str) -> str:
+    async with ClientSession() as session:
+        async with session.post(
+            TRANSLATE_URL,
+            params={"client": "gtx", "sl": "auto", "tl": target, "dt": "t"},
+            data={"q": text[:TRANSLATE_MAX_INPUT]},
+            proxy=OUTBOUND_PROXY,
+            proxy_auth=PROXY_AUTH,
+        ) as response:
+            response.raise_for_status()
+            return parse_translation(await response.json(content_type=None))
+
+
+async def translate_message(interaction: discord.Interaction, message: discord.Message) -> None:
+    text = message_text(message)
+    if not text:
+        await interaction.response.send_message("Nothing to translate / Нечего переводить", ephemeral=True)
+        return
+    await interaction.response.defer(ephemeral=True, thinking=True)
+    target = translation_target(text)
+    try:
+        translated = await translate_text(text, target)
+    except Exception:
+        log.exception("Translation failed")
+        await interaction.followup.send(
+            "Translation is unavailable right now / Перевод сейчас недоступен", ephemeral=True
+        )
+        return
+    flag = "🇷🇺" if target == "ru" else "🇬🇧"
+    await interaction.followup.send(
+        f"{flag} {_truncate(translated, 1900)}\n-# {message.jump_url}",
+        ephemeral=True,
+        allowed_mentions=discord.AllowedMentions.none(),
+    )
+
+
 def _disabled_review_view() -> discord.ui.View:
     """Версия с отключёнными кнопками (после вынесения решения)."""
     view = discord.ui.View(timeout=None)
@@ -402,10 +469,18 @@ class FormsBot(discord.Client):
         # IP -> список monotonic-времён последних заявок (для рейт-лимита /apply)
         self._apply_hits: dict[str, list[float]] = {}
         self._review_locks: dict[int, asyncio.Lock] = {}
+        self.tree = discord.app_commands.CommandTree(self)
+        self.tree.add_command(discord.app_commands.ContextMenu(
+            name="Translate / Перевести", callback=translate_message
+        ))
 
     async def setup_hook(self) -> None:
         # Регистрируем persistent view, чтобы кнопки работали после рестарта.
         self.add_view(ReviewView(self))
+        try:
+            await self.tree.sync()
+        except discord.HTTPException:
+            log.exception("Slash command sync failed; the Translate menu may be missing")
 
         app = web.Application(client_max_size=256 * 1024, middlewares=[self.security_headers])
         app.router.add_get("/", self.handle_index)          # сайт с формой заявки

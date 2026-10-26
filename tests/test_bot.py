@@ -201,5 +201,23 @@ class ConfigurationTests(unittest.TestCase):
         )
 
 
+class TranslationTests(unittest.TestCase):
+    def test_target_language_flips_between_russian_and_english(self):
+        self.assertEqual(bot.translation_target("Всем привет, коллаб в пятницу"), "en")
+        self.assertEqual(bot.translation_target("New collab starts Friday"), "ru")
+        self.assertEqual(bot.translation_target("Collab в пятницу, rules в ветке"), "en")
+        self.assertEqual(bot.translation_target("🔥 123"), "ru")
+
+    def test_parse_joins_google_sentence_chunks(self):
+        data = [[["Привет всем. ", "Hello everyone. ", None], ["Правила в ветке.", "Rules in the thread.", None]], None, "en"]
+        self.assertEqual(bot.parse_translation(data), "Привет всем. Правила в ветке.")
+
+    def test_message_text_includes_embeds(self):
+        field = SimpleNamespace(name="When", value="Friday")
+        embed = SimpleNamespace(title="Collab", description="Join us", fields=[field])
+        message = SimpleNamespace(content="", embeds=[embed])
+        self.assertEqual(bot.message_text(message), "Collab\n\nJoin us\n\nWhen\nFriday")
+
+
 if __name__ == "__main__":
     unittest.main()
