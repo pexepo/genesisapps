@@ -1,6 +1,7 @@
 # --- Secrets / state (НЕ коммитить) ---
 .env
 submissions.json
+uploads/
 
 # --- Python ---
 .venv/

@@ -1,5 +1,5 @@
 /* ============================================================
-   Genesis — application form logic
+   Genesis: application form logic
    ============================================================ */
 (function () {
   "use strict";
@@ -8,25 +8,33 @@
 
   const I18N = {
     ru: {
+      "nav.owners": "Владельцы",
+      "owners.title": "Кто стоит за юнитом",
+      "owners.owner": "Owner",
+      "owners.coowner": "Co-owner",
+      "up.title": "Или загрузи файл с эдитом",
+      "up.hint": "MP4, MOV или WEBM до 200 МБ. Файл хранится 14 дней, потом удаляется.",
+      "up.loading": "Загружаем",
+      "up.done": "Загружено. Ссылка вставлена в поле выше. Удалится",
+      "up.err.auth": "Сначала войди через Discord на первом шаге.",
+      "up.err.size": "Файл больше 200 МБ. Сожми его или дай ссылку.",
+      "up.err.type": "Нужен видеофайл MP4, MOV или WEBM.",
+      "up.err.limit": "Лимит загрузок на сегодня исчерпан. Дай ссылку на видео.",
+      "up.err.generic": "Не удалось загрузить. Попробуй ещё раз или дай ссылку.",
       "nav.faq": "FAQ",
-      "how.kicker": "01 — Отбор",
-      "styles.kicker": "02 — Правила",
-      "apply.kicker": "03 — Заявка",
-      "more.kicker": "04 — Другие заявки",
-      "faq.kicker": "05 — Вопросы",
       "check.title": "Проверь себя перед заявкой",
       "check.1": "Эдит длиннее 7 секунд",
-      "check.2": "Работа моя — не ремейк и не копия чужого стиля",
+      "check.2": "Работа моя, не ремейк и не копия чужого стиля",
       "check.3": "Сделана за последние 3 месяца",
       "check.go": "Отметь пункты выше",
-      "check.ready": "Всё сходится — к заявке ↓",
+      "check.ready": "Подать заявку",
       "draft.saved": "Черновик сохранён",
       "more.title": "Дополнительные заявки",
       "more.1.title": "Джадж, лого-мейкер и другие роли",
       "more.1.text": "Хочешь помогать юниту не только эдитами? Отдельная анкета на роли в команде.",
       "faq.title": "Частые вопросы",
       "faq.1.q": "Нужно ли быть на Discord-сервере?",
-      "faq.1.a": "Да. При одобрении бот выдаёт роль на сервере Genesis — если тебя там нет, роль выдать не получится. Зайди заранее.",
+      "faq.1.a": "Да. При одобрении бот выдаёт роль на сервере Genesis. Если тебя там нет, роль выдать не получится. Зайди заранее.",
       "faq.2.q": "Как я узнаю результат?",
       "faq.2.a": "Если заявку примут, у тебя появится роль юнита на сервере. Заявки смотрят вручную, поэтому точного срока нет.",
       "faq.3.q": "Можно подать заявку ещё раз?",
@@ -40,14 +48,9 @@
       "nav.rules": "Правила",
       "nav.apply": "Заявка",
       "hero.cta": "Подать заявку",
-      "fact.1.value": "4 шага",
-      "fact.1.label": "≈ 3 минуты на заявку",
-      "fact.2.value": "Вручную",
-      "fact.2.label": "каждую работу смотрят джаджи",
-      "fact.3.label": "русский и английский",
       "how.title": "Как попасть в юнит",
       "how.1.title": "Войди через Discord",
-      "how.1.text": "Подтверждаем аккаунт, чтобы роль пришла именно тебе — без ручного ввода ника.",
+      "how.1.text": "Подтверждаем аккаунт, чтобы роль пришла именно тебе, без ручного ввода ника.",
       "how.2.title": "Покажи лучший эдит",
       "how.2.text": "Одна сильная работа скажет больше десяти средних. Свежая, твоя, от 7 секунд.",
       "how.3.title": "Джаджи решают",
@@ -55,7 +58,7 @@
       "apply.title": "Подать заявку",
       "hero.eyebrow": "PRIVATE APPLICATIONS / 2026",
       "hero.status": "Приём заявок открыт",
-      "tagline": "Независимый юнит визуальных авторов. Покажи не тренд — покажи свой почерк.",
+      "tagline": "Независимый юнит визуальных авторов. Покажи не тренд, а свой почерк.",
       "aside.foot": "Заявки проверяются вручную",
       "steps.1": "Личность",
       "steps.2": "Творчество",
@@ -70,14 +73,14 @@
       "s4.title": "Почти готово",
       "s4.sub": "Проверь данные перед отправкой.",
       "f.discord.label": "Discord-аккаунт",
-      "f.discord.hint": "Подтверди аккаунт через Discord — без ручного ввода и ошибок.",
+      "f.discord.hint": "Подтверди аккаунт через Discord: без ручного ввода и ошибок.",
       "auth.checking": "Проверяем подключение Discord",
       "auth.title": "Discord не подключён",
       "auth.sub": "Безопасный вход только для подтверждения твоего ID.",
       "auth.button": "Войти через Discord",
       "auth.connected": "Подключено как",
       "f.software.label": "Программа для эдитинга",
-      "f.software.hint": "Выбери одну или две — или укажи свою.",
+      "f.software.hint": "Выбери одну или две, или укажи свою.",
       "f.software.other": "Другое",
       "f.software.otherLabel": "Своя программа",
       "f.extra.label": "Доп. программа (3D / пост-обработка)",
@@ -89,7 +92,7 @@
       "f.best.label": "Ссылка на лучшую работу",
       "f.best.hint": "Прямая ссылка на видео или пост, которым гордишься.",
       "f.social.label": "Соцсеть с работами",
-      "f.social.hint": "TikTok, Instagram, YouTube, Telegram — где ты выкладываешь эдиты.",
+      "f.social.hint": "TikTok, Instagram, YouTube, Telegram: где ты выкладываешь эдиты.",
       "f.optional": "необяз.",
       "nav.back": "Назад",
       "nav.next": "Далее",
@@ -115,9 +118,9 @@
       "foot.styles": "Правила заявок",
       "foot.contactHtml": "Связь · Discord: <b>pexepo</b>",
       "styles.title": "Правила подачи заявок",
-      "styles.bodyHtml": "<ol class=\"rules\"><li>Минимальная длина эдита — не менее 7 секунд.</li><li>Ремейки чужих работ и сильное вдохновение другими авторами не допускаются.</li><li>Эдит должен быть новым или сделанным в течение последних 3 месяцев.</li><li>Не расстраивайся, если получил деклайн или реапп!</li></ol>",
+      "styles.bodyHtml": "<ol class=\"rules\"><li>Минимальная длина эдита: 7 секунд.</li><li>Ремейки чужих работ и сильное вдохновение другими авторами не допускаются.</li><li>Эдит должен быть новым или сделанным в течение последних 3 месяцев.</li><li>Не расстраивайся, если получил деклайн или реапп!</li></ol>",
       "review.edit": "Изменить",
-      "review.empty": "— не указано —",
+      "review.empty": "не указано",
       "err.required": "Заполни это поле",
       "err.url": "Укажи корректную ссылку (https://…)",
       "err.discord": "Похоже на некорректный юзернейм",
@@ -126,25 +129,33 @@
       "error.rate": "Слишком много заявок. Подожди немного и попробуй позже."
     },
     en: {
+      "nav.owners": "Owners",
+      "owners.title": "Who runs the unit",
+      "owners.owner": "Owner",
+      "owners.coowner": "Co-owner",
+      "up.title": "Or upload your edit",
+      "up.hint": "MP4, MOV or WEBM up to 200 MB. Stored for 14 days, then deleted.",
+      "up.loading": "Uploading",
+      "up.done": "Uploaded. The link is in the field above. Deleted on",
+      "up.err.auth": "Sign in with Discord on the first step first.",
+      "up.err.size": "The file is over 200 MB. Compress it or share a link.",
+      "up.err.type": "Use an MP4, MOV or WEBM video.",
+      "up.err.limit": "Daily upload limit reached. Share a link instead.",
+      "up.err.generic": "Upload failed. Try again or share a link.",
       "nav.faq": "FAQ",
-      "how.kicker": "01 — Selection",
-      "styles.kicker": "02 — Rules",
-      "apply.kicker": "03 — Application",
-      "more.kicker": "04 — More applications",
-      "faq.kicker": "05 — Questions",
       "check.title": "Check yourself before applying",
       "check.1": "The edit is longer than 7 seconds",
-      "check.2": "It's my own work — not a remake or a copied style",
+      "check.2": "It's my own work, not a remake or a copied style",
       "check.3": "Made within the last 3 months",
       "check.go": "Tick the boxes above",
-      "check.ready": "All good — go to the application ↓",
+      "check.ready": "Apply now",
       "draft.saved": "Draft saved",
       "more.title": "Additional applications",
       "more.1.title": "Judge, logo maker and other roles",
       "more.1.text": "Want to help the unit beyond edits? A separate form for team roles.",
       "faq.title": "FAQ",
       "faq.1.q": "Do I need to be on the Discord server?",
-      "faq.1.a": "Yes. When you're accepted, the bot gives you a role on the Genesis server — it can't if you're not there. Join beforehand.",
+      "faq.1.a": "Yes. When you're accepted, the bot gives you a role on the Genesis server. It can't if you're not there. Join beforehand.",
       "faq.2.q": "How will I know the result?",
       "faq.2.a": "If you're accepted, the unit role appears on your profile on the server. Applications are reviewed by hand, so there's no fixed deadline.",
       "faq.3.q": "Can I apply again?",
@@ -158,14 +169,9 @@
       "nav.rules": "Rules",
       "nav.apply": "Apply",
       "hero.cta": "Apply now",
-      "fact.1.value": "4 steps",
-      "fact.1.label": "≈ 3 minutes to apply",
-      "fact.2.value": "By hand",
-      "fact.2.label": "judges review every edit",
-      "fact.3.label": "Russian and English",
       "how.title": "How to get in",
       "how.1.title": "Sign in with Discord",
-      "how.1.text": "We verify your account so the role lands on you — no typing usernames.",
+      "how.1.text": "We verify your account so the role lands on you, no typing usernames.",
       "how.2.title": "Show your best edit",
       "how.2.text": "One strong piece says more than ten average ones. Fresh, yours, 7 seconds or longer.",
       "how.3.title": "Judges decide",
@@ -188,14 +194,14 @@
       "s4.title": "Almost there",
       "s4.sub": "Check your details before sending.",
       "f.discord.label": "Discord account",
-      "f.discord.hint": "Verify with Discord — no manual entry and no identity mistakes.",
+      "f.discord.hint": "Verify with Discord: no manual entry and no identity mistakes.",
       "auth.checking": "Checking Discord connection",
       "auth.title": "Discord not connected",
       "auth.sub": "Secure sign-in used only to verify your account ID.",
       "auth.button": "Continue with Discord",
       "auth.connected": "Connected as",
       "f.software.label": "Editing software",
-      "f.software.hint": "Pick one or two — or enter your own.",
+      "f.software.hint": "Pick one or two, or enter your own.",
       "f.software.other": "Other",
       "f.software.otherLabel": "Your software",
       "f.extra.label": "Extra software (3D / post)",
@@ -207,7 +213,7 @@
       "f.best.label": "Link to your best work",
       "f.best.hint": "A direct link to a video or post you're proud of.",
       "f.social.label": "Portfolio / socials",
-      "f.social.hint": "TikTok, Instagram, YouTube, Telegram — where you post edits.",
+      "f.social.hint": "TikTok, Instagram, YouTube, Telegram: where you post edits.",
       "f.optional": "optional",
       "nav.back": "Back",
       "nav.next": "Next",
@@ -233,9 +239,9 @@
       "foot.styles": "Application rules",
       "foot.contactHtml": "Contact · Discord: <b>pexepo</b>",
       "styles.title": "Application rules",
-      "styles.bodyHtml": "<ol class=\"rules\"><li>The minimum edit length is 7 seconds.</li><li>Remakes of others' work and heavy inspiration from other authors are not allowed.</li><li>The edit must be new — or made within the last 3 months.</li><li>Don't be upset if you get a decline or a reapp!</li></ol>",
+      "styles.bodyHtml": "<ol class=\"rules\"><li>The minimum edit length is 7 seconds.</li><li>Remakes of others' work and heavy inspiration from other authors are not allowed.</li><li>The edit must be new or made within the last 3 months.</li><li>Don't be upset if you get a decline or a reapp!</li></ol>",
       "review.edit": "Edit",
-      "review.empty": "— not provided —",
+      "review.empty": "not provided",
       "err.required": "This field is required",
       "err.url": "Enter a valid link (https://…)",
       "err.discord": "That doesn't look like a valid username",
@@ -285,7 +291,7 @@
   const doneEl = $("#done");
   const reviewEl = $("#review");
   const TOTAL = 4;
-  // Ссылка на дополнительную анкету в Google Forms; пусто — блок скрыт.
+  // Ссылка на дополнительную анкету в Google Forms; пусто: блок скрыт.
   const EXTRA_FORM_URL = "https://forms.gle/U79PM5t4L83gVRup8";
 
   const FIELDS = [
@@ -855,6 +861,97 @@
 
   applyLang(lang, false);
   showStep(1, "init");
+
+  /* ---------------- video upload ---------------- */
+
+  (function initUpload() {
+    const input = $("#uploadInput");
+    if (!input) return;
+    const box = $("#upload");
+    const bar = $("#uploadBar");
+    const progress = $("#uploadProgress");
+    const status = $("#uploadStatus");
+    const MAX = 200 * 1024 * 1024;
+
+    function say(key, extra, isError) {
+      status.textContent = t(key) + (extra ? " " + extra : "");
+      box.classList.toggle("is-error", !!isError);
+    }
+
+    input.addEventListener("change", function () {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      if (file.size > MAX) { say("up.err.size", "", true); input.value = ""; return; }
+      if (!/\.(mp4|m4v|mov|webm)$/i.test(file.name)) { say("up.err.type", "", true); input.value = ""; return; }
+
+      const data = new FormData();
+      data.append("file", file);
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/upload");
+      xhr.withCredentials = true;
+      box.classList.add("is-busy");
+      progress.hidden = false;
+      bar.style.width = "0%";
+      say("up.loading", file.name, false);
+
+      xhr.upload.addEventListener("progress", function (e) {
+        if (!e.lengthComputable) return;
+        const pct = Math.round((e.loaded / e.total) * 100);
+        bar.style.width = pct + "%";
+        say("up.loading", file.name + " · " + pct + "%", false);
+      });
+      xhr.addEventListener("loadend", function () {
+        box.classList.remove("is-busy");
+        input.value = "";
+        let body = {};
+        try { body = JSON.parse(xhr.responseText || "{}"); } catch (e) {}
+        if (xhr.status === 200 && body.url) {
+          const best = $("#best");
+          best.value = body.url;
+          best.dispatchEvent(new Event("input", { bubbles: true }));
+          const until = new Date(body.expires_at).toLocaleDateString(lang === "ru" ? "ru-RU" : "en-GB");
+          say("up.done", until + ".", false);
+          box.classList.add("is-done");
+          return;
+        }
+        progress.hidden = true;
+        const map = { 401: "up.err.auth", 413: "up.err.size", 415: "up.err.type", 429: "up.err.limit" };
+        say(map[xhr.status] || "up.err.generic", "", true);
+      });
+      xhr.send(data);
+    });
+  })();
+
+  /* ---------------- owners (live Discord profiles) ---------------- */
+
+  (function initOwners() {
+    const cards = $$("[data-owner]");
+    if (!cards.length) return;
+    fetch("/api/owners")
+      .then(function (res) { return res.ok ? res.json() : []; })
+      .then(function (list) {
+        list.forEach(function (o) {
+          const card = $('[data-owner="' + o.id + '"]');
+          if (!card) return;
+          if (o.name) $(".owner-name", card).textContent = o.name;
+          if (o.username) $(".owner-user", card).textContent = "@" + o.username;
+          const img = $(".owner-avatar img", card);
+          if (o.avatar && img) {
+            img.src = o.avatar;
+            img.alt = o.name || "";
+            img.hidden = false;
+          }
+          const banner = $(".owner-banner", card);
+          if (o.banner) {
+            banner.style.backgroundImage = "url(\"" + o.banner + "\")";
+            card.classList.add("has-banner");
+          } else if (o.accent) {
+            banner.style.backgroundColor = o.accent;
+          }
+        });
+      })
+      .catch(function () {});
+  })();
 
   /* ---------------- extra applications (Google Forms) ---------------- */
 

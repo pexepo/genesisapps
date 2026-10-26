@@ -185,6 +185,134 @@ class WebsiteApplicationTests(unittest.IsolatedAsyncioTestCase):
         self.client.create_forum_post.assert_not_awaited()
 
 
+class UploadTests(unittest.IsolatedAsyncioTestCase):
+    MP4 = b"\x00\x00\x00\x18ftypmp42" + b"\x00" * 64
+
+    async def asyncSetUp(self):
+        from aiohttp import FormData, web
+        from aiohttp.test_utils import TestClient, TestServer
+
+        self.FormData = FormData
+        self.tmp = tempfile.TemporaryDirectory()
+        self.patches = [
+            patch.object(bot, "OAUTH_ENABLED", True),
+            patch.object(bot, "UPLOAD_DIR", Path(self.tmp.name)),
+            patch.object(bot, "SITE_URL", "https://example.test"),
+        ]
+        for p in self.patches:
+            p.start()
+        self.client = bot.FormsBot()
+        self.client._read_session = Mock(return_value={"id": "42", "username": "artist"})
+        app = web.Application()
+        app.router.add_post("/upload", self.client.handle_upload)
+        app.router.add_get("/v/{name}", self.client.handle_video)
+        self.http = TestClient(TestServer(app))
+        await self.http.start_server()
+
+    async def asyncTearDown(self):
+        await self.http.close()
+        for p in self.patches:
+            p.stop()
+        self.tmp.cleanup()
+
+    def form(self, data, filename="edit.mp4"):
+        form = self.FormData()
+        form.add_field("file", data, filename=filename, content_type="video/mp4")
+        return form
+
+    async def test_upload_returns_playable_link(self):
+        resp = await self.http.post("/upload", data=self.form(self.MP4))
+        body = await resp.json()
+        self.assertEqual(resp.status, 200, body)
+        self.assertTrue(body["url"].startswith("https://example.test/v/"))
+        name = body["url"].rsplit("/", 1)[1]
+        self.assertRegex(name, bot.UPLOAD_NAME_RE)
+
+        video = await self.http.get(f"/v/{name}")
+        self.assertEqual(video.status, 200)
+        self.assertEqual(video.headers["Content-Type"], "video/mp4")
+        self.assertEqual(await video.read(), self.MP4)
+
+    async def test_upload_rejects_disguised_file_and_anonymous_users(self):
+        resp = await self.http.post("/upload", data=self.form(b"<html><script>x</script></html>"))
+        self.assertEqual(resp.status, 415)
+        resp = await self.http.post("/upload", data=self.form(self.MP4, filename="edit.exe"))
+        self.assertEqual(resp.status, 415)
+        self.assertEqual(list(Path(self.tmp.name).iterdir()), [])
+
+        self.client._read_session = Mock(return_value=None)
+        resp = await self.http.post("/upload", data=self.form(self.MP4))
+        self.assertEqual(resp.status, 401)
+
+    async def test_upload_enforces_size_and_daily_limit(self):
+        with patch.object(bot, "UPLOAD_MAX_BYTES", 32):
+            resp = await self.http.post("/upload", data=self.form(self.MP4))
+        self.assertEqual(resp.status, 413)
+        self.assertEqual(list(Path(self.tmp.name).iterdir()), [])
+
+        with patch.object(bot, "UPLOAD_PER_USER_DAY", 1):
+            first = await self.http.post("/upload", data=self.form(self.MP4))
+            second = await self.http.post("/upload", data=self.form(self.MP4))
+        self.assertEqual((first.status, second.status), (200, 429))
+
+    async def test_expired_video_is_hidden_and_cleaned_up(self):
+        resp = await self.http.post("/upload", data=self.form(self.MP4))
+        name = (await resp.json())["url"].rsplit("/", 1)[1]
+        path = Path(self.tmp.name) / name
+        old = time.time() - bot.UPLOAD_TTL - 60
+        os.utime(path, (old, old))
+
+        self.assertEqual((await self.http.get(f"/v/{name}")).status, 404)
+        self.assertEqual(bot.cleanup_uploads(Path(self.tmp.name), time.time()), 1)
+        self.assertFalse(path.exists())
+
+    async def test_video_route_rejects_path_tricks(self):
+        for name in ["..%2Fstate.json", "abc.mp4", "x" * 22 + ".html"]:
+            self.assertEqual((await self.http.get(f"/v/{name}")).status, 404)
+
+
+class DecisionMessageTests(unittest.TestCase):
+    def test_message_follows_application_language(self):
+        with patch.object(bot, "SITE_URL", "https://example.test"):
+            ru = bot.decision_dm(True, "Motion", "ru")
+            en = bot.decision_dm(False, None, "en")
+            both = bot.decision_dm(False, None, None)
+        self.assertIn("принята", ru)
+        self.assertIn("**Motion**", ru)
+        self.assertNotIn("accepted", ru)
+        self.assertIn("declined", en)
+        self.assertIn("https://example.test", en)
+        self.assertIn("отклонена", both)
+        self.assertIn("declined", both)
+
+    def test_owners_config_skips_malformed_entries(self):
+        owners = bot.parse_owners("1|owner|https://a.test, bad, 2|co-owner|https://b.test")
+        self.assertEqual([o["id"] for o in owners], ["1", "2"])
+        self.assertEqual(owners[1]["role"], "co-owner")
+
+    def test_video_signatures(self):
+        self.assertTrue(bot.sniff_video(UploadTests.MP4[:16], "mp4"))
+        self.assertTrue(bot.sniff_video(b"\x1a\x45\xdf\xa3" + b"\x00" * 12, "webm"))
+        self.assertFalse(bot.sniff_video(b"<!doctype html>", "mp4"))
+        self.assertFalse(bot.sniff_video(UploadTests.MP4[:16], "webm"))
+
+
+class NotifyApplicantTests(unittest.IsolatedAsyncioTestCase):
+    async def test_dm_failure_is_reported_not_raised(self):
+        import discord
+
+        member = SimpleNamespace(send=AsyncMock(side_effect=discord.Forbidden(Mock(status=403), "closed")))
+        client = bot.FormsBot()
+        client._resolve_member = AsyncMock(return_value=member)
+        note = await client._notify_applicant(object(), {"applicant_id": "5", "lang": "ru"}, True, "Motion")
+        self.assertIn("DMs are closed", note)
+
+        member.send = AsyncMock()
+        note = await client._notify_applicant(object(), {"applicant_id": "5", "lang": "ru"}, True, "Motion")
+        self.assertIn("notified", note)
+        self.assertIn("принята", member.send.await_args.args[0])
+
+
 class ConfigurationTests(unittest.TestCase):
     def test_first_three_role_choices_grant_core_role(self):
         values = {

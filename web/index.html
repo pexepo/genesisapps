@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#07060c" />
   <title>Genesis | Unit application</title>
   <meta name="description" content="Apply to join Genesis, an independent unit of visual artists and editors." />
-  <meta property="og:title" content="Genesis — unit application" />
+  <meta property="og:title" content="Genesis unit application" />
   <meta property="og:description" content="An independent unit of visual artists and editors. Applications are open." />
   <meta property="og:image" content="/assets/loop-poster.jpg" />
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/assets/styles.css?v=20261028" />
+  <link rel="stylesheet" href="/assets/styles.css?v=20261029" />
 </head>
 <body>
   <a class="skip" href="#apply" data-i18n="nav.skip"></a>
@@ -28,6 +28,7 @@
     <nav class="top-nav" aria-label="Sections">
       <a href="#how" data-i18n="nav.how"></a>
       <a href="#rules" data-i18n="nav.rules"></a>
+      <a href="#owners" data-i18n="nav.owners"></a>
       <a href="#faq" data-i18n="nav.faq"></a>
     </nav>
     <div class="top-actions">
@@ -60,11 +61,6 @@
           <a class="btn primary" href="#apply"><span data-i18n="hero.cta"></span><span class="ico" aria-hidden="true">&#8595;</span></a>
           <a class="btn ghost" href="https://discord.gg/GfVUWdbanx" target="_blank" rel="noopener noreferrer"><span data-i18n="foot.server"></span><span class="ico" aria-hidden="true">&#8599;</span></a>
         </div>
-        <ul class="hero-facts">
-          <li><b data-i18n="fact.1.value"></b><span data-i18n="fact.1.label"></span></li>
-          <li><b data-i18n="fact.2.value"></b><span data-i18n="fact.2.label"></span></li>
-          <li><b>RU / EN</b><span data-i18n="fact.3.label"></span></li>
-        </ul>
       </div>
     </section>
 
@@ -76,17 +72,21 @@
     </div>
 
     <section class="section" id="how" aria-labelledby="howTitle">
-      <p class="kicker" data-i18n="how.kicker"></p>
       <h2 id="howTitle" data-i18n="how.title"></h2>
-      <ol class="how">
-        <li><span class="how-num">01</span><h3 data-i18n="how.1.title"></h3><p data-i18n="how.1.text"></p></li>
-        <li><span class="how-num">02</span><h3 data-i18n="how.2.title"></h3><p data-i18n="how.2.text"></p></li>
-        <li><span class="how-num">03</span><h3 data-i18n="how.3.title"></h3><p data-i18n="how.3.text"></p></li>
-      </ol>
+      <div class="timeline">
+        <div class="tl-ruler" aria-hidden="true">
+          <span>00:00</span><span>00:05</span><span>00:10</span><span>00:15</span><span>00:20</span>
+        </div>
+        <ol class="tl-track">
+          <li class="tl-clip c1"><h3 data-i18n="how.1.title"></h3><p data-i18n="how.1.text"></p></li>
+          <li class="tl-clip c2"><h3 data-i18n="how.2.title"></h3><p data-i18n="how.2.text"></p></li>
+          <li class="tl-clip c3"><h3 data-i18n="how.3.title"></h3><p data-i18n="how.3.text"></p></li>
+        </ol>
+        <span class="tl-playhead" aria-hidden="true"></span>
+      </div>
     </section>
 
-    <section class="section" id="rules" aria-labelledby="rulesTitle">
-      <p class="kicker" data-i18n="styles.kicker"></p>
+    <section class="section rules-section" id="rules" aria-labelledby="rulesTitle">
       <h2 id="rulesTitle" data-i18n="styles.title"></h2>
       <div class="rules-body" data-i18n-html="styles.bodyHtml"></div>
 
@@ -103,7 +103,6 @@
     </section>
 
     <section class="section apply" id="apply" aria-labelledby="applyTitle">
-      <p class="kicker" data-i18n="apply.kicker"></p>
       <h2 id="applyTitle" data-i18n="apply.title"></h2>
 
       <div class="card" id="card">
@@ -140,7 +139,6 @@
 
             <section class="panel" data-panel="1">
               <header class="panel-head">
-                <span class="panel-kicker" data-i18n="steps.1"></span>
                 <h3 data-i18n="s1.title"></h3>
                 <p data-i18n="s1.sub"></p>
               </header>
@@ -203,7 +201,6 @@
 
             <section class="panel" data-panel="2" hidden>
               <header class="panel-head">
-                <span class="panel-kicker" data-i18n="steps.2"></span>
                 <h3 data-i18n="s2.title"></h3>
                 <p data-i18n="s2.sub"></p>
               </header>
@@ -226,7 +223,6 @@
 
             <section class="panel" data-panel="3" hidden>
               <header class="panel-head">
-                <span class="panel-kicker" data-i18n="steps.3"></span>
                 <h3 data-i18n="s3.title"></h3>
                 <p data-i18n="s3.sub"></p>
               </header>
@@ -235,6 +231,15 @@
                 <label for="best" data-i18n="f.best.label"></label>
                 <small class="hint" data-i18n="f.best.hint"></small>
                 <small class="err" data-err="best"></small>
+              </div>
+              <div class="upload" id="upload">
+                <input type="file" id="uploadInput" accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.m4v,.webm" />
+                <label class="upload-drop" for="uploadInput">
+                  <span class="upload-title" data-i18n="up.title"></span>
+                  <span class="upload-hint" data-i18n="up.hint"></span>
+                </label>
+                <div class="upload-progress" id="uploadProgress" hidden><span id="uploadBar"></span></div>
+                <p class="upload-status" id="uploadStatus" role="status" aria-live="polite"></p>
               </div>
               <div class="field" data-field="social">
                 <input class="control" id="social" name="social" type="url" inputmode="url" placeholder=" " maxlength="300" />
@@ -249,7 +254,6 @@
 
             <section class="panel" data-panel="4" hidden>
               <header class="panel-head">
-                <span class="panel-kicker" data-i18n="steps.4"></span>
                 <h3 data-i18n="s4.title"></h3>
                 <p data-i18n="s4.sub"></p>
               </header>
@@ -277,8 +281,29 @@
       <p class="legal" data-i18n="legal"></p>
     </section>
 
+    <section class="section" id="owners" aria-labelledby="ownersTitle">
+      <h2 id="ownersTitle" data-i18n="owners.title"></h2>
+      <div class="credits">
+        <a class="owner" data-owner="875109580147949609" href="https://guns.lol/pexepo" target="_blank" rel="noopener noreferrer">
+          <span class="owner-banner"></span>
+          <span class="owner-avatar"><img alt="" hidden /></span>
+          <span class="owner-role" data-i18n="owners.owner"></span>
+          <strong class="owner-name">pexepo</strong>
+          <span class="owner-user">@pexepo</span>
+          <span class="owner-link">guns.lol/pexepo<i aria-hidden="true">&#8599;</i></span>
+        </a>
+        <a class="owner" data-owner="653637661071900682" href="https://guns.lol/kaoryxq" target="_blank" rel="noopener noreferrer">
+          <span class="owner-banner"></span>
+          <span class="owner-avatar"><img alt="" hidden /></span>
+          <span class="owner-role" data-i18n="owners.coowner"></span>
+          <strong class="owner-name">kaory</strong>
+          <span class="owner-user">@sh1zuwe</span>
+          <span class="owner-link">guns.lol/kaoryxq<i aria-hidden="true">&#8599;</i></span>
+        </a>
+      </div>
+    </section>
+
     <section class="section" id="more" aria-labelledby="moreTitle" hidden>
-      <p class="kicker" data-i18n="more.kicker"></p>
       <h2 id="moreTitle" data-i18n="more.title"></h2>
       <div class="more-grid">
         <a class="more-card" id="extraForm" href="#" target="_blank" rel="noopener noreferrer">
@@ -291,7 +316,6 @@
     </section>
 
     <section class="section" id="faq" aria-labelledby="faqTitle">
-      <p class="kicker" data-i18n="faq.kicker"></p>
       <h2 id="faqTitle" data-i18n="faq.title"></h2>
       <div class="faq">
         <details><summary data-i18n="faq.1.q"></summary><p data-i18n="faq.1.a"></p></details>
@@ -343,7 +367,7 @@
     </div>
   </div>
 
-  <script src="/assets/app.js?v=20261028" defer></script>
+  <script src="/assets/app.js?v=20261029" defer></script>
   <script src="/assets/sky.js?v=20261027" defer></script>
 </body>
 </html>

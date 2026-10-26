@@ -23,9 +23,10 @@ import time
 import uuid
 import asyncio
 import logging
+import re
 from pathlib import Path
 from datetime import datetime, timezone
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 
 # --- TLS / корневые сертификаты (ВАЖНО: до импорта aiohttp/discord) ---
 # Python с python.org на macOS часто ставится без корневых сертификатов, из-за чего
@@ -114,6 +115,27 @@ DECLINED_TAG_ID = int(os.getenv("DECLINED_TAG_ID") or 0) or None
 STATE_FILE = Path(os.getenv("STATE_FILE", "submissions.json"))
 STATE_MAX = 5000
 
+# --- Загрузка видео с сайта (хранится UPLOAD_TTL_DAYS, потом удаляется) ---
+UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR") or STATE_FILE.parent / "uploads")
+UPLOAD_MAX_BYTES = int(os.getenv("UPLOAD_MAX_MB", "200")) * 1024 * 1024
+UPLOAD_TTL = int(os.getenv("UPLOAD_TTL_DAYS", "14")) * 86400
+UPLOAD_DIR_MAX_BYTES = int(os.getenv("UPLOAD_DIR_MAX_GB", "15")) * 1024 ** 3
+UPLOAD_PER_USER_DAY = int(os.getenv("UPLOAD_PER_USER_DAY", "5"))
+UPLOAD_TYPES = {"mp4": "video/mp4", "m4v": "video/mp4", "mov": "video/quicktime", "webm": "video/webm"}
+UPLOAD_NAME_RE = re.compile(r"^[A-Za-z0-9_-]{22}\.(mp4|m4v|mov|webm)$")
+
+_redirect = urlsplit(DISCORD_REDIRECT_URI)
+SITE_URL = (os.getenv("SITE_URL", "").strip() or (
+    f"{_redirect.scheme}://{_redirect.netloc}" if _redirect.netloc else ""
+)).rstrip("/")
+
+# Владельцы для блока на сайте: "discord_id|роль|ссылка" через запятую.
+OWNERS_RAW = os.getenv(
+    "OWNERS",
+    "875109580147949609|owner|https://guns.lol/pexepo,"
+    "653637661071900682|co-owner|https://guns.lol/kaoryxq",
+)
+
 
 def _load_role_choices() -> list[dict]:
     """Читает ROLE_CHOICE_1..4 (_ID и _NAME) из окружения."""
@@ -166,6 +188,67 @@ EMBED_FIELDS_MAX = 25
 def _truncate(text: str, limit: int) -> str:
     text = (text or "").strip()
     return text if len(text) <= limit else text[: limit - 1] + "…"
+
+
+def parse_owners(raw: str) -> list[dict]:
+    owners = []
+    for chunk in (raw or "").split(","):
+        parts = [p.strip() for p in chunk.split("|")]
+        if len(parts) == 3 and parts[0].isdigit():
+            owners.append({"id": parts[0], "role": parts[1], "link": parts[2]})
+    return owners
+
+
+OWNERS = parse_owners(OWNERS_RAW)
+
+
+def sniff_video(head: bytes, ext: str) -> bool:
+    """Проверяет сигнатуру файла, а не только расширение."""
+    if ext == "webm":
+        return head.startswith(b"\x1a\x45\xdf\xa3")
+    # MP4/MOV: ISO BMFF, второй 4-байтовый блок — тип первого атома.
+    return len(head) >= 8 and head[4:8] in (b"ftyp", b"moov", b"mdat", b"wide", b"free", b"skip")
+
+
+def upload_expired(mtime: float, now: float) -> bool:
+    return now - mtime > UPLOAD_TTL
+
+
+def cleanup_uploads(folder: Path, now: float) -> int:
+    """Удаляет просроченные видео и брошенные недокачанные файлы."""
+    removed = 0
+    if not folder.is_dir():
+        return 0
+    for path in folder.iterdir():
+        try:
+            age = now - path.stat().st_mtime
+            if (path.suffix == ".part" and age > 86400) or (
+                path.suffix != ".part" and upload_expired(path.stat().st_mtime, now)
+            ):
+                path.unlink()
+                removed += 1
+        except FileNotFoundError:
+            continue
+    return removed
+
+
+def decision_dm(accepted: bool, role_name: str | None, lang: str | None) -> str:
+    site = f"\n{SITE_URL}" if SITE_URL else ""
+    if accepted:
+        role_ru = f" Роль: **{role_name}**." if role_name else ""
+        role_en = f" Role: **{role_name}**." if role_name else ""
+        ru = f"Твоя заявка в Genesis принята.{role_ru} Добро пожаловать в юнит!"
+        en = f"Your Genesis application was accepted.{role_en} Welcome to the unit!"
+    else:
+        ru = ("Твоя заявка в Genesis отклонена. Не расстраивайся: через 24 часа можно "
+              f"подать новую с другой работой.{site}")
+        en = ("Your Genesis application was declined. Don't give up: you can apply again "
+              f"in 24 hours with a different edit.{site}")
+    if lang == "ru":
+        return ru
+    if lang == "en":
+        return en
+    return f"{ru}\n\n{en}"
 
 
 # ----------------------------------------------------------------------------
@@ -223,11 +306,13 @@ class SubmissionStore:
         applicant: str,
         response_id: str,
         applicant_id: str | None = None,
+        lang: str | None = None,
     ) -> None:
         async with self._lock:
             self._data[str(thread_id)] = {
                 "applicant": applicant,  # юзернейм ИЛИ числовой Discord ID
                 "applicant_id": applicant_id,
+                "lang": lang,
                 "response_id": response_id,
                 "submitted_at": datetime.now(timezone.utc).isoformat(),
                 "status": "pending",
@@ -471,6 +556,9 @@ class FormsBot(discord.Client):
         # IP -> список monotonic-времён последних заявок (для рейт-лимита /apply)
         self._apply_hits: dict[str, list[float]] = {}
         self._review_locks: dict[int, asyncio.Lock] = {}
+        self._upload_hits: dict[str, list[float]] = {}
+        self._owners_cache: tuple[float, list[dict]] | None = None
+        self._cleanup_task: asyncio.Task | None = None
         self.tree = discord.app_commands.CommandTree(self)
         self.tree.add_command(discord.app_commands.ContextMenu(
             name="Translate / Перевести", callback=translate_message
@@ -493,8 +581,12 @@ class FormsBot(discord.Client):
         app.router.add_post("/auth/logout", self.handle_logout)
         app.router.add_post("/apply", self.handle_apply)    # заявки с сайта (публичный)
         app.router.add_post("/submit", self.handle_submit)  # заявки из Google Forms (с секретом)
+        app.router.add_post("/upload", self.handle_upload)  # видео к заявке (нужен вход)
+        app.router.add_get("/v/{name}", self.handle_video)  # просмотр загруженного видео
+        app.router.add_get("/api/owners", self.handle_owners)
         if ASSETS_DIR.is_dir():
             app.router.add_static("/assets/", path=ASSETS_DIR, name="assets")
+        self._cleanup_task = asyncio.create_task(self._cleanup_uploads_loop())
         self._runner = web.AppRunner(app)
         await self._runner.setup()
         site = web.TCPSite(self._runner, HOST, PORT)
@@ -516,6 +608,8 @@ class FormsBot(discord.Client):
             log.info("Forum channel found: #%s", ch.name)
 
     async def close(self) -> None:
+        if self._cleanup_task is not None:
+            self._cleanup_task.cancel()
         if self._runner is not None:
             await self._runner.cleanup()
         await super().close()
@@ -819,7 +913,8 @@ class FormsBot(discord.Client):
             log.exception("Could not create a post from the website application")
             return web.json_response({"ok": False, "error": "server error"}, status=500)
 
-        await self.store.create(thread.id, applicant, post["response_id"], applicant_id)
+        lang = payload.get("lang") if payload.get("lang") in ("ru", "en") else None
+        await self.store.create(thread.id, applicant, post["response_id"], applicant_id, lang)
         if session and APPLICANT_ROLE_ID:
             await self._assign_applicant_role(thread.guild, applicant_id)
         log.info("Website application accepted: applicant=%s (ip=%s, thread=%s)", applicant, ip, thread.id)
@@ -912,7 +1007,8 @@ class FormsBot(discord.Client):
             await self._apply_status(thread, accepted=False, role_name=None)
             await self.store.set_status(thread.id, "declined", None)
             await self._disable_buttons(interaction)
-            await thread.send("Application declined.")
+            note = await self._notify_applicant(thread.guild, rec, accepted=False, role_name=None)
+            await thread.send(f"Application declined.{note}", allowed_mentions=discord.AllowedMentions.none())
 
     async def on_accept(self, interaction: discord.Interaction) -> None:
         if await self._deny_if_not_reviewer(interaction):
@@ -997,6 +1093,8 @@ class FormsBot(discord.Client):
                 f"Assign **{choice['name']}** manually."
             )
 
+        assign_note += await self._notify_applicant(guild, rec, accepted=True, role_name=choice["name"])
+
         # Обновляем статус ветки.
         thread = interaction.channel
         if isinstance(thread, discord.Thread) and thread.id == thread_id:
@@ -1016,6 +1114,144 @@ class FormsBot(discord.Client):
         await interaction.followup.send(
             f"Complete. Status: Accepted - {choice['name']}.{assign_note}", ephemeral=True
         )
+
+    async def _notify_applicant(
+        self, guild: discord.Guild | None, rec: dict, accepted: bool, role_name: str | None
+    ) -> str:
+        """Пишет заявителю в ЛС о решении. Возвращает пометку для ветки."""
+        target = rec.get("applicant_id") or rec.get("applicant")
+        member = await self._resolve_member(guild, target) if guild else None
+        if member is None:
+            return " Applicant was not notified (not found on the server)."
+        try:
+            await member.send(decision_dm(accepted, role_name, rec.get("lang")))
+            return " Applicant notified in DM."
+        except discord.HTTPException:
+            return " Could not DM the applicant (DMs are closed)."
+
+    # ---------- загрузка видео ----------
+
+    async def handle_upload(self, request: web.Request) -> web.Response:
+        if not OAUTH_ENABLED:
+            return web.json_response({"ok": False, "error": "uploads_disabled"}, status=503)
+        session = self._read_session(request)
+        if not session:
+            return web.json_response({"ok": False, "error": "authentication_required"}, status=401)
+        uid = str(session.get("id"))
+        now = time.time()
+        hits = [t for t in self._upload_hits.get(uid, []) if t > now - 86400]
+        if len(hits) >= UPLOAD_PER_USER_DAY:
+            return web.json_response({"ok": False, "error": "upload_limit"}, status=429)
+        if request.content_length and request.content_length > UPLOAD_MAX_BYTES + 65536:
+            return web.json_response({"ok": False, "error": "too_large"}, status=413)
+        if self._uploads_size() > UPLOAD_DIR_MAX_BYTES:
+            log.warning("Upload storage is full (%s bytes)", UPLOAD_DIR_MAX_BYTES)
+            return web.json_response({"ok": False, "error": "storage_full"}, status=507)
+
+        try:
+            reader = await request.multipart()
+            field = await reader.next()
+        except Exception:
+            return web.json_response({"ok": False, "error": "bad_request"}, status=400)
+        if field is None or field.name != "file" or not field.filename:
+            return web.json_response({"ok": False, "error": "bad_request"}, status=400)
+        ext = field.filename.rsplit(".", 1)[-1].lower() if "." in field.filename else ""
+        if ext not in UPLOAD_TYPES:
+            return web.json_response({"ok": False, "error": "unsupported_type"}, status=415)
+
+        UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+        name = f"{secrets.token_urlsafe(16)}.{ext}"
+        part = UPLOAD_DIR / f"{name}.part"
+        size, head = 0, b""
+        try:
+            with part.open("wb") as fh:
+                while True:
+                    chunk = await field.read_chunk(1024 * 1024)
+                    if not chunk:
+                        break
+                    size += len(chunk)
+                    if size > UPLOAD_MAX_BYTES:
+                        part.unlink(missing_ok=True)
+                        return web.json_response({"ok": False, "error": "too_large"}, status=413)
+                    if len(head) < 16:
+                        head += chunk[: 16 - len(head)]
+                    fh.write(chunk)
+        except Exception:
+            part.unlink(missing_ok=True)
+            log.exception("Upload failed for user %s", uid)
+            return web.json_response({"ok": False, "error": "upload_failed"}, status=400)
+        if size == 0 or not sniff_video(head, ext):
+            part.unlink(missing_ok=True)
+            return web.json_response({"ok": False, "error": "unsupported_type"}, status=415)
+
+        part.replace(UPLOAD_DIR / name)
+        hits.append(now)
+        self._upload_hits[uid] = hits
+        expires = datetime.fromtimestamp(now + UPLOAD_TTL, timezone.utc)
+        log.info("Video uploaded by %s: %s (%s bytes)", uid, name, size)
+        return web.json_response({
+            "ok": True,
+            "url": f"{SITE_URL}/v/{name}",
+            "expires_at": expires.isoformat(),
+        })
+
+    async def handle_video(self, request: web.Request) -> web.StreamResponse:
+        name = request.match_info.get("name", "")
+        if not UPLOAD_NAME_RE.match(name):
+            raise web.HTTPNotFound()
+        path = UPLOAD_DIR / name
+        try:
+            mtime = path.stat().st_mtime
+        except FileNotFoundError:
+            raise web.HTTPNotFound(text="This video has expired or does not exist.")
+        if upload_expired(mtime, time.time()):
+            raise web.HTTPNotFound(text="This video has expired or does not exist.")
+        return web.FileResponse(path, headers={
+            "Content-Type": UPLOAD_TYPES[name.rsplit(".", 1)[1]],
+            "Content-Disposition": "inline",
+            "Cache-Control": "private, max-age=3600",
+        })
+
+    def _uploads_size(self) -> int:
+        if not UPLOAD_DIR.is_dir():
+            return 0
+        return sum(p.stat().st_size for p in UPLOAD_DIR.iterdir() if p.is_file())
+
+    async def _cleanup_uploads_loop(self) -> None:
+        while True:
+            try:
+                removed = cleanup_uploads(UPLOAD_DIR, time.time())
+                if removed:
+                    log.info("Removed %s expired upload(s)", removed)
+            except Exception:
+                log.exception("Upload cleanup failed")
+            await asyncio.sleep(3600)
+
+    # ---------- владельцы ----------
+
+    async def handle_owners(self, request: web.Request) -> web.Response:
+        now = time.monotonic()
+        if self._owners_cache and now - self._owners_cache[0] < 1800:
+            return web.json_response(self._owners_cache[1])
+        out, complete = [], True
+        for owner in OWNERS:
+            item = dict(owner, name=None, username=None, avatar=None, banner=None, accent=None)
+            try:
+                user = await self.fetch_user(int(owner["id"]))
+                item.update(
+                    name=user.global_name or user.name,
+                    username=user.name,
+                    avatar=user.display_avatar.replace(size=256).url,
+                    banner=user.banner.replace(size=640).url if user.banner else None,
+                    accent=str(user.accent_color) if user.accent_color else None,
+                )
+            except Exception:
+                complete = False
+                log.warning("Could not load owner profile %s", owner["id"], exc_info=True)
+            out.append(item)
+        if complete:
+            self._owners_cache = (now, out)
+        return web.json_response(out, headers={"Cache-Control": "public, max-age=600"})
 
     async def _assign_applicant_role(self, guild: discord.Guild, applicant_id: str) -> None:
         role = guild.get_role(APPLICANT_ROLE_ID) if APPLICANT_ROLE_ID else None
