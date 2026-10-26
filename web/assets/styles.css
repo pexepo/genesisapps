@@ -156,6 +156,22 @@ h1, h2, h3 { margin: 0; }
 }
 .discord-profile:hover { color: var(--paper); border-color: var(--line-strong); }
 
+.sfx-toggle {
+  min-width: 48px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r);
+  background: none;
+  color: var(--paper);
+  font: 500 11px / 1 var(--mono);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.sfx-toggle:hover { border-color: var(--paper); }
+.sfx-toggle.is-off { color: var(--faint); text-decoration: line-through; }
+
 .lang-switch {
   position: relative;
   display: grid;

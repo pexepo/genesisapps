@@ -292,6 +292,7 @@
 
   const $ = function (s, r) { return (r || document).querySelector(s); };
   const $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  function sfx(name) { if (window.GenesisSFX) window.GenesisSFX(name); }
 
   const form = $("#form");
   const panels = $$(".panel");
@@ -354,7 +355,7 @@
   }
 
   $$(".lang-opt").forEach(function (b) {
-    b.addEventListener("click", function () { applyLang(b.getAttribute("data-lang"), true); });
+    b.addEventListener("click", function () { sfx("lang"); applyLang(b.getAttribute("data-lang"), true); });
   });
 
   function paintAuth() {
@@ -454,7 +455,13 @@
     const box = $("#check");
     if (box) box.classList.toggle("is-ready", all);
   }
-  checkBoxes.forEach(function (c) { c.addEventListener("change", paintCheck); });
+  checkBoxes.forEach(function (c) {
+    c.addEventListener("change", function () {
+      const all = checkBoxes.every(function (x) { return x.checked; });
+      sfx(!c.checked ? "off" : all ? "ready" : "check");
+      paintCheck();
+    });
+  });
 
   /* ---------------- draft autosave ---------------- */
 
@@ -543,12 +550,14 @@
       chip.addEventListener("click", function () {
         const turningOn = !chip.classList.contains("is-active");
         if (turningOn && activeCount() >= max) {
+          sfx("deny");
           wrap.classList.remove("at-limit");
           void wrap.offsetWidth; // restart limit pulse
           wrap.classList.add("at-limit");
           return;
         }
         chip.classList.toggle("is-active");
+        sfx(turningOn ? "on" : "off");
         if (chip.getAttribute("data-val") === "__other" && other) {
           other.hidden = !chip.classList.contains("is-active");
           if (other.hidden) other.value = "";
@@ -689,8 +698,12 @@
     if (dir !== "init" && first && first.focus) { try { first.focus({ preventScroll: true }); } catch (e) {} }
   }
 
-  nextBtn.addEventListener("click", function () { if (validateStep(current)) showStep(current + 1, "fwd"); });
-  backBtn.addEventListener("click", function () { showStep(current - 1, "back"); });
+  function goNext() {
+    if (validateStep(current)) { sfx("next"); showStep(current + 1, "fwd"); }
+    else sfx("deny");
+  }
+  nextBtn.addEventListener("click", goNext);
+  backBtn.addEventListener("click", function () { sfx("back"); showStep(current - 1, "back"); });
 
   // Enter advances instead of submitting (except on textarea / review step)
   form.addEventListener("keydown", function (e) {
@@ -698,7 +711,7 @@
     if (e.target && e.target.tagName === "TEXTAREA") return;
     if (current < TOTAL) {
       e.preventDefault();
-      if (validateStep(current)) showStep(current + 1, "fwd");
+      goNext();
     }
   });
 
@@ -769,7 +782,7 @@
 
     // validate all data steps; jump to first problem
     for (let n = 1; n <= TOTAL - 1; n++) {
-      if (!validateStep(n)) { showStep(n, "back"); return; }
+      if (!validateStep(n)) { sfx("deny"); showStep(n, "back"); return; }
     }
 
     const payload = {
@@ -825,6 +838,7 @@
   }
 
   function succeed() {
+    sfx("success");
     clearDraft();
     form.hidden = true;
     doneEl.hidden = false;
@@ -839,6 +853,7 @@
   }
 
   function showFailure(kind) {
+    sfx("error");
     const overlay = $("#failure");
     $("#failureTitle").textContent = t("failure." + kind + ".title");
     $("#failureText").textContent = t("failure." + kind + ".text");
@@ -895,8 +910,8 @@
     input.addEventListener("change", function () {
       const file = input.files && input.files[0];
       if (!file) return;
-      if (file.size > MAX) { say("up.err.size", "", true); input.value = ""; return; }
-      if (!/\.(mp4|m4v|mov|webm)$/i.test(file.name)) { say("up.err.type", "", true); input.value = ""; return; }
+      if (file.size > MAX) { sfx("deny"); say("up.err.size", "", true); input.value = ""; return; }
+      if (!/\.(mp4|m4v|mov|webm)$/i.test(file.name)) { sfx("deny"); say("up.err.type", "", true); input.value = ""; return; }
 
       const data = new FormData();
       data.append("file", file);
@@ -925,12 +940,14 @@
           best.dispatchEvent(new Event("input", { bubbles: true }));
           const until = new Date(body.expires_at).toLocaleDateString(lang === "ru" ? "ru-RU" : "en-GB");
           say("up.done", until + ".", false);
+          sfx("uploaded");
           box.classList.add("is-done");
           return;
         }
         progress.hidden = true;
         const map = { 401: "up.err.auth", 413: "up.err.size", 415: "up.err.type", 429: "up.err.limit" };
         say(map[xhr.status] || "up.err.generic", "", true);
+        sfx("error");
       });
       xhr.send(data);
     });
@@ -961,6 +978,7 @@
     // Filter chips: All / pexepo / kaory.
     $$(".wf").forEach(function (btn) {
       btn.addEventListener("click", function () {
+        sfx("tap");
         const f = btn.getAttribute("data-filter");
         $$(".wf").forEach(function (b) {
           const on = b === btn;
@@ -1046,7 +1064,7 @@
 
     tiles.forEach(function (tile) {
       tile.setAttribute("aria-label", tile.getAttribute("data-author") + ", " + tile.getAttribute("data-dur"));
-      tile.addEventListener("click", function () { open(tile); });
+      tile.addEventListener("click", function () { sfx("open"); open(tile); });
     });
     $$("[data-close-player]", player).forEach(function (el) { el.addEventListener("click", close); });
 
@@ -1054,8 +1072,8 @@
     playBtn.addEventListener("click", toggle);
     $("#playerStage").addEventListener("click", toggle);
     muteBtn.addEventListener("click", function () { video.muted = !video.muted; paintMute(); });
-    $("#pPrev").addEventListener("click", function () { load(index - 1); });
-    $("#pNext").addEventListener("click", function () { load(index + 1); });
+    $("#pPrev").addEventListener("click", function () { sfx("back"); load(index - 1); });
+    $("#pNext").addEventListener("click", function () { sfx("next"); load(index + 1); });
     $("#pFull").addEventListener("click", function () {
       const box = $(".player-box", player);
       if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
@@ -1136,6 +1154,24 @@
         });
       })
       .catch(function () {});
+  })();
+
+  /* ---------------- sound toggle + FAQ clicks ---------------- */
+
+  (function initSfxToggle() {
+    const btn = $("#sfxToggle");
+    if (!btn || !window.GenesisSFX) { if (btn) btn.hidden = true; return; }
+    function paint() {
+      const on = window.GenesisSFX.enabled();
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.classList.toggle("is-off", !on);
+    }
+    btn.addEventListener("click", function () {
+      window.GenesisSFX.setEnabled(!window.GenesisSFX.enabled());
+      paint();
+    });
+    paint();
+    $$(".faq summary").forEach(function (sm) { sm.addEventListener("click", function () { sfx("tap"); }); });
   })();
 
   /* ---------------- extra applications (Google Forms) ---------------- */
