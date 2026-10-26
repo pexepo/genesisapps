@@ -8,6 +8,7 @@
 
   const I18N = {
     ru: {
+      "tc.halloween": "ДО ХЭЛЛОУИНА",
       "nav.owners": "Владельцы",
       "owners.title": "Кто стоит за юнитом",
       "owners.owner": "Owner",
@@ -129,6 +130,7 @@
       "error.rate": "Слишком много заявок. Подожди немного и попробуй позже."
     },
     en: {
+      "tc.halloween": "HALLOWEEN IN",
       "nav.owners": "Owners",
       "owners.title": "Who runs the unit",
       "owners.owner": "Owner",
@@ -968,9 +970,36 @@
 
   (function initTimecode() {
     const el = $("#timecode");
-    if (!el || reducedMotion) return;
+    if (!el) return;
     const start = Date.now();
     function pad(n) { return n < 10 ? "0" + n : String(n); }
+
+    // Halloween theme: the viewfinder counts down to Oct 31 instead of running.
+    if (document.documentElement.getAttribute("data-theme") === "halloween") {
+      const label = $("#tcLabel");
+      const now = new Date();
+      const target = new Date(now.getFullYear(), 9, 31);
+      const fps = $(".vf-right .fps");
+      if (fps) fps.hidden = true;
+      label.hidden = false;
+      function tick() {
+        const left = target - Date.now();
+        if (left <= 0) {
+          label.textContent = "HAPPY HALLOWEEN";
+          el.hidden = true;
+          return;
+        }
+        label.textContent = t("tc.halloween");
+        const s = Math.floor(left / 1000);
+        el.textContent = pad(Math.floor(s / 86400)) + ":" + pad(Math.floor(s / 3600) % 24) + ":" +
+          pad(Math.floor(s / 60) % 60) + ":" + pad(s % 60);
+      }
+      tick();
+      setInterval(tick, 1000);
+      return;
+    }
+
+    if (reducedMotion) return;
     setInterval(function () {
       if (document.hidden) return;
       const ms = Date.now() - start;

@@ -15,7 +15,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/assets/styles.css?v=20261029" />
+  <script src="/assets/theme.js?v=20261031"></script>
+  <link rel="stylesheet" href="/assets/styles.css?v=20261031" />
 </head>
 <body>
   <a class="skip" href="#apply" data-i18n="nav.skip"></a>
@@ -51,7 +52,7 @@
         <span class="vf-corner tl"></span><span class="vf-corner tr"></span>
         <span class="vf-corner bl"></span><span class="vf-corner br"></span>
         <span class="vf-meta vf-left"><i class="rec-dot"></i>REC</span>
-        <span class="vf-meta vf-right"><span id="timecode">00:00:00:00</span> · 24 FPS</span>
+        <span class="vf-meta vf-right"><span id="tcLabel" hidden></span> <span id="timecode">00:00:00:00</span><span class="fps"> · 24 FPS</span></span>
       </div>
       <div class="hero-inner">
         <p class="hero-status"><span class="status-dot"></span><span data-i18n="hero.status"></span></p>
@@ -367,7 +368,7 @@
     </div>
   </div>
 
-  <script src="/assets/app.js?v=20261030" defer></script>
-  <script src="/assets/sky.js?v=20261027" defer></script>
+  <script src="/assets/app.js?v=20261031" defer></script>
+  <script src="/assets/sky.js?v=20261031" defer></script>
 </body>
 </html>

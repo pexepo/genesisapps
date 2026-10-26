@@ -12,12 +12,15 @@
 
   const PAPER = "236, 235, 230";
   const VIOLET = "157, 140, 255";
+  const EMBER = "255, 122, 26";
+  const HALLOWEEN = document.documentElement.getAttribute("data-theme") === "halloween";
 
   let w = 0, h = 0, dpr = 1;
   let stars = [], sparkles = [], orbits = [];
   let px = 0, py = 0, tx = 0, ty = 0; // pointer parallax, smoothed
   let running = false, visible = true, raf = 0;
   let meteor = null, nextMeteor = 4000;
+  let moon = null, bats = [], clouds = [], embers = [], craters = [], lastT = 0;
 
   // Deterministic PRNG so the sky looks the same on every resize.
   function rng(seed) {
@@ -67,6 +70,58 @@
       { rx: s * 0.88, ry: s * 0.30, tilt: -0.38, speed: -0.028, phase: 2.4 },
       { rx: s * 0.40, ry: s * 0.13, tilt: -0.50, speed: 0.07, phase: 4.0 }
     ].map(function (o) { o.cx = cx; o.cy = cy; return o; });
+
+    if (HALLOWEEN) buildHalloween(r, s, narrow);
+  }
+
+  function buildHalloween(r, s, narrow) {
+    moon = {
+      x: w * (narrow ? 0.72 : 0.74),
+      y: h * (narrow ? 0.27 : 0.34),
+      r: s * (narrow ? 0.15 : 0.17)
+    };
+    craters = [];
+    for (let i = 0; i < 9; i++) {
+      const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 0.72;
+      craters.push({ x: Math.cos(a) * d, y: Math.sin(a) * d, r: 0.05 + r() * 0.13 });
+    }
+    bats = [];
+    for (let i = 0; i < 7; i++) {
+      bats.push({
+        offset: r() * (w + 200),
+        speed: 26 + r() * 40,
+        base: moon.y + (r() - 0.5) * moon.r * 3.2,
+        amp: 10 + r() * 26,
+        phase: r() * Math.PI * 2,
+        flap: 7 + r() * 5,
+        size: 0.8 + r() * 0.9
+      });
+    }
+    clouds = [];
+    for (let i = 0; i < 4; i++) {
+      clouds.push({
+        offset: r() * (w + 600),
+        speed: 6 + r() * 10,
+        y: moon.y + (r() - 0.35) * moon.r * 1.8,
+        rx: moon.r * (1.6 + r() * 1.8),
+        ry: moon.r * (0.16 + r() * 0.14)
+      });
+    }
+    embers = [];
+    const n = Math.round(w / 28);
+    for (let i = 0; i < n; i++) embers.push(newEmber(r, true));
+  }
+
+  function newEmber(rand, anywhere) {
+    rand = rand || Math.random;
+    return {
+      x: rand() * w,
+      y: anywhere ? h * (0.35 + rand() * 0.65) : h + 10,
+      vy: 14 + rand() * 30,
+      sway: rand() * Math.PI * 2,
+      size: 0.8 + rand() * 1.8,
+      life: 0.4 + rand() * 0.6
+    };
   }
 
   function resize() {
@@ -109,8 +164,154 @@
     return [o.cx + x * c - y * s, o.cy + x * s + y * c];
   }
 
+  function drawMoon(ox, oy) {
+    const x = moon.x + ox, y = moon.y + oy, R = moon.r;
+    const haze = ctx.createRadialGradient(x, y, R * 0.8, x, y, R * 3.4);
+    haze.addColorStop(0, "rgba(" + EMBER + ",0.20)");
+    haze.addColorStop(0.45, "rgba(" + EMBER + ",0.06)");
+    haze.addColorStop(1, "rgba(" + EMBER + ",0)");
+    ctx.fillStyle = haze;
+    ctx.fillRect(x - R * 3.4, y - R * 3.4, R * 6.8, R * 6.8);
+
+    const body = ctx.createRadialGradient(x - R * 0.35, y - R * 0.35, R * 0.1, x, y, R);
+    body.addColorStop(0, "#f6efdc");
+    body.addColorStop(0.7, "#e2d6b6");
+    body.addColorStop(1, "#c9a978");
+    ctx.beginPath();
+    ctx.arc(x, y, R, 0, Math.PI * 2);
+    ctx.fillStyle = body;
+    ctx.fill();
+    ctx.save();
+    ctx.clip();
+    for (let i = 0; i < craters.length; i++) {
+      const c = craters[i];
+      ctx.beginPath();
+      ctx.arc(x + c.x * R, y + c.y * R, c.r * R, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(120, 96, 60, 0.09)";
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function bat(x, y, size, flap) {
+    const wy = flap * 7;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size, size);
+    ctx.beginPath();
+    ctx.moveTo(0, -3);
+    ctx.quadraticCurveTo(-7, -7 + wy * 0.3, -16, -5 + wy);
+    ctx.quadraticCurveTo(-13, -1 + wy * 0.6, -12, 2 + wy * 0.5);
+    ctx.quadraticCurveTo(-8, 0, -6, 3);
+    ctx.quadraticCurveTo(-3, 1, 0, 5);
+    ctx.quadraticCurveTo(3, 1, 6, 3);
+    ctx.quadraticCurveTo(8, 0, 12, 2 + wy * 0.5);
+    ctx.quadraticCurveTo(13, -1 + wy * 0.6, 16, -5 + wy);
+    ctx.quadraticCurveTo(7, -7 + wy * 0.3, 0, -3);
+    ctx.moveTo(-2, -3); ctx.lineTo(-2.6, -6); ctx.lineTo(-0.8, -3.6);
+    ctx.moveTo(2, -3); ctx.lineTo(2.6, -6); ctx.lineTo(0.8, -3.6);
+    ctx.fillStyle = "#0b0a0c";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(" + PAPER + ",0.22)";
+    ctx.lineWidth = 0.6 / size;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function cobweb() {
+    // Corner web anchored at the hero's top-left, under the header.
+    const ax = 0, ay = 64, R = Math.min(w, h) * 0.32;
+    const spokes = 7;
+    ctx.save();
+    ctx.strokeStyle = "rgba(" + PAPER + ",0.13)";
+    ctx.lineWidth = 0.8;
+    const angles = [];
+    for (let i = 0; i < spokes; i++) angles.push((i / (spokes - 1)) * (Math.PI / 2));
+    angles.forEach(function (a) {
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(ax + Math.cos(a) * R, ay + Math.sin(a) * R);
+      ctx.stroke();
+    });
+    for (let ring = 1; ring <= 6; ring++) {
+      const rr = (ring / 6) * R * 0.92;
+      ctx.beginPath();
+      for (let i = 0; i < spokes; i++) {
+        const a = angles[i];
+        const px = ax + Math.cos(a) * rr, py = ay + Math.sin(a) * rr;
+        if (i === 0) ctx.moveTo(px, py);
+        else {
+          const pa = angles[i - 1], mid = (a + pa) / 2, sag = rr * 0.86;
+          ctx.quadraticCurveTo(ax + Math.cos(mid) * sag, ay + Math.sin(mid) * sag, px, py);
+        }
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawHalloween(sec, dt) {
+    const ox = tx * 30, oy = ty * 18;
+    drawMoon(ox, oy);
+
+    // Clouds drift across the moon, darkening it.
+    for (let i = 0; i < clouds.length; i++) {
+      const c = clouds[i];
+      const span = w + c.rx * 4;
+      const x = w + c.rx * 2 - ((sec * c.speed + c.offset) % span) + ox;
+      const g = ctx.createRadialGradient(x, c.y + oy, 0, x, c.y + oy, c.rx);
+      g.addColorStop(0, "rgba(10, 10, 11, 0.78)");
+      g.addColorStop(1, "rgba(10, 10, 11, 0)");
+      ctx.save();
+      ctx.translate(x, c.y + oy);
+      ctx.scale(1, c.ry / c.rx);
+      ctx.translate(-x, -(c.y + oy));
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, c.y + oy, c.rx, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    for (let i = 0; i < bats.length; i++) {
+      const b = bats[i];
+      const span = w + 200;
+      const x = w + 100 - ((sec * b.speed + b.offset) % span) + tx * 40;
+      const y = b.base + Math.sin(sec * 0.9 + b.phase) * b.amp + ty * 24;
+      bat(x, y, b.size, Math.sin(sec * b.flap + b.phase));
+    }
+
+    // Embers rise from the bottom like sparks off a bonfire.
+    for (let i = 0; i < embers.length; i++) {
+      const e = embers[i];
+      e.y -= e.vy * dt;
+      e.life -= dt * 0.12;
+      if (e.y < h * 0.25 || e.life <= 0) { embers[i] = newEmber(null, false); continue; }
+      const x = e.x + Math.sin(sec * 1.3 + e.sway) * 8;
+      const a = Math.max(0, Math.min(1, e.life)) * 0.85;
+      ctx.fillStyle = "rgba(" + EMBER + "," + a.toFixed(3) + ")";
+      ctx.fillRect(x, e.y, e.size, e.size);
+    }
+
+    // Ground fog.
+    const fog = ctx.createLinearGradient(0, h * 0.72, 0, h);
+    fog.addColorStop(0, "rgba(" + PAPER + ",0)");
+    fog.addColorStop(1, "rgba(" + PAPER + ",0.07)");
+    ctx.fillStyle = fog;
+    for (let k = 0; k < 2; k++) {
+      const shift = Math.sin(sec * 0.12 + k * 2) * w * 0.08;
+      ctx.beginPath();
+      ctx.ellipse(w * (0.3 + k * 0.45) + shift, h * 0.98, w * 0.55, h * 0.2, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    cobweb();
+  }
+
   function draw(t) {
     const sec = t / 1000;
+    const dt = Math.min(0.05, Math.max(0, (t - lastT) / 1000));
+    lastT = t;
     tx += (px - tx) * 0.05;
     ty += (py - ty) * 0.05;
     ctx.clearRect(0, 0, w, h);
@@ -122,6 +323,11 @@
       const x = st.x + tx * 18 * st.depth, y = st.y + ty * 12 * st.depth;
       ctx.fillStyle = "rgba(" + PAPER + "," + a.toFixed(3) + ")";
       ctx.fillRect(x, y, st.size, st.size);
+    }
+
+    if (HALLOWEEN) {
+      drawHalloween(sec, dt);
+      return;
     }
 
     // Orbit arcs: hairline ellipse plus a comet with a fading tail.

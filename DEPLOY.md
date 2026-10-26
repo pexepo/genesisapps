@@ -28,6 +28,10 @@ ssh -i ~/.ssh/oskolok_deploy_ed25519 -o IdentitiesOnly=yes root@185.166.153.240 
 
 Bump `?v=` on `styles.css` / `app.js` in `web/index.html` when they change, or browsers keep the old copy for a day.
 
+## Seasonal theme
+
+`web/assets/theme.js` switches the Halloween theme on from Oct 20 to Nov 2 (visitor's local time) and back off by itself. Preview with `?theme=halloween` or `?theme=base`. The pre-Halloween design is tagged `design-base-2026-10`.
+
 ## Check
 
 ```sh
