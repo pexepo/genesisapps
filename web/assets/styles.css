@@ -538,6 +538,183 @@ h1, h2, h3 { margin: 0; }
 .upload-status:empty { display: none; }
 .upload.is-error .upload-status { color: var(--danger); }
 
+/* ---------------- owners' work: collage ---------------- */
+
+.works-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 40px; }
+.works-head h2 { max-width: 20ch; font: 800 clamp(34px, 5.4vw, 64px) / 0.98 var(--display); letter-spacing: -0.035em; text-transform: uppercase; }
+.works-filter { display: flex; border: 1px solid var(--line-strong); }
+.wf {
+  padding: 9px 14px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: 500 12px / 1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.wf + .wf { border-left: 1px solid var(--line-strong); }
+.wf:hover { color: var(--paper); }
+.wf.is-active { background: var(--paper); color: var(--bg); }
+
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-rows: clamp(150px, 15vw, 210px);
+  grid-auto-flow: dense;
+  gap: 6px;
+}
+.work {
+  position: relative;
+  grid-column: span 2;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-3);
+  overflow: hidden;
+  cursor: pointer;
+  animation: workIn 0.35s var(--ease) both;
+}
+.work.w-a { grid-column: span 4; grid-row: span 2; }
+.work img,
+.work video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease), opacity 0.25s;
+}
+.work video { opacity: 0; }
+.work.is-previewing video { opacity: 1; }
+.work:hover img,
+.work:hover video { transform: scale(1.04); }
+.work::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 10, 11, 0.85), transparent 45%);
+  pointer-events: none;
+}
+.work-meta {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: var(--paper);
+  font: 500 12px / 1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.work-meta b { font-weight: 500; }
+.work-meta span { color: var(--muted); font-variant-numeric: tabular-nums; }
+.work:hover { border-color: var(--accent); }
+.work:focus-visible { outline-offset: -3px; }
+
+/* ---------------- player ---------------- */
+
+.player {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  animation: fade 0.25s ease both;
+}
+.player-scrim { position: absolute; inset: 0; background: rgba(10, 10, 11, 0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.player-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(1100px, 100%);
+  max-height: 100%;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+}
+.player-box:fullscreen { width: 100%; height: 100%; border: 0; }
+.player-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 0 0 16px;
+  border-bottom: 1px solid var(--line);
+  font: 500 12px / 1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.player-title { color: var(--paper); }
+.player-count { margin-right: auto; color: var(--faint); }
+.player-stage { position: relative; display: grid; place-items: center; min-height: 0; flex: 1; background: #050506; cursor: pointer; }
+.player-stage video { display: block; width: 100%; max-height: calc(100vh - 140px); object-fit: contain; }
+.player-box:fullscreen .player-stage video { max-height: none; height: 100%; }
+.player-stage::after {
+  content: "\25B6";
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border: 1px solid var(--paper);
+  background: rgba(10, 10, 11, 0.6);
+  color: var(--paper);
+  font-size: 22px;
+  transition: opacity 0.2s;
+}
+.player.is-playing .player-stage::after { opacity: 0; }
+
+.player-bar { display: flex; align-items: center; gap: 0; border-top: 1px solid var(--line); }
+.pb {
+  flex: none;
+  min-width: 48px;
+  height: 48px;
+  padding: 0 14px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: none;
+  color: var(--paper);
+  font: 500 12px / 1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.pb:hover { background: var(--bg-3); }
+.pb.is-off { color: var(--faint); }
+.player-x { border-right: 0; border-left: 1px solid var(--line); }
+.ptc { flex: none; padding: 0 14px; color: var(--muted); font: 500 12px / 1 var(--mono); font-variant-numeric: tabular-nums; }
+.ptc i { margin: 0 6px; color: var(--faint); font-style: normal; }
+/* Scrubber drawn like an NLE ruler: ticks, buffered range, played range and playhead. */
+.pscrub {
+  position: relative;
+  flex: 1;
+  align-self: stretch;
+  margin: 0 14px;
+  cursor: pointer;
+  touch-action: none;
+  background: repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 12px) left 70% / 100% 30% no-repeat;
+}
+.pbuf, .pfill { position: absolute; left: 0; top: 50%; height: 2px; margin-top: -1px; width: 0; }
+.pbuf { background: var(--line-strong); }
+.pfill { background: var(--accent); }
+.phead { position: absolute; top: 8px; bottom: 8px; width: 1px; margin-left: -0.5px; background: var(--accent); left: 0; }
+.phead::before { content: ""; position: absolute; top: -1px; left: -5px; border: 5px solid transparent; border-top: 7px solid var(--accent); }
+.pscrub:focus-visible { outline-offset: -2px; }
+
+@keyframes workIn { from { transform: translateY(8px); } to { transform: none; } }
+
+@media (max-width: 900px) {
+  .works-grid { grid-template-columns: 1fr; grid-auto-rows: 58vw; }
+  .work, .work.w-a { grid-column: auto; grid-row: auto; }
+}
+@media (max-width: 600px) {
+  .ptc, #pPrev, #pNext { display: none; }
+}
+
 /* ---------------- application card ---------------- */
 
 
@@ -863,7 +1040,7 @@ textarea.control { min-height: 140px; resize: vertical; padding-top: 30px; }
 
 /* ---------------- responsive ---------------- */
 
-@media (max-width: 960px) {
+@media (max-width: 1100px) {
   .top-nav { display: none; }
   .top-actions { margin-left: auto; }
 }

@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
   <script src="/assets/theme.js?v=20261031"></script>
-  <link rel="stylesheet" href="/assets/styles.css?v=20261031" />
+  <link rel="stylesheet" href="/assets/styles.css?v=20261101" />
 </head>
 <body>
   <a class="skip" href="#apply" data-i18n="nav.skip"></a>
@@ -30,6 +30,7 @@
       <a href="#how" data-i18n="nav.how"></a>
       <a href="#rules" data-i18n="nav.rules"></a>
       <a href="#owners" data-i18n="nav.owners"></a>
+      <a href="#works" data-i18n="nav.works"></a>
       <a href="#faq" data-i18n="nav.faq"></a>
     </nav>
     <div class="top-actions">
@@ -304,6 +305,49 @@
       </div>
     </section>
 
+    <section class="section" id="works" aria-labelledby="worksTitle">
+      <div class="works-head">
+        <h2 id="worksTitle" data-i18n="works.title"></h2>
+        <div class="works-filter" role="group" aria-label="Filter">
+          <button type="button" class="wf is-active" data-filter="all" aria-pressed="true" data-i18n="works.all"></button>
+          <button type="button" class="wf" data-filter="pexepo" aria-pressed="false">pexepo</button>
+          <button type="button" class="wf" data-filter="kaory" aria-pressed="false">kaory</button>
+        </div>
+      </div>
+      <div class="works-grid" id="worksGrid">
+        <button type="button" class="work w-a" data-work="pexepo-01" data-author="pexepo" data-dur="0:50">
+          <img src="/assets/works/pexepo-01.jpg" alt="" loading="lazy" />
+          <video muted loop playsinline preload="none" data-src="/assets/works/pexepo-01-loop.mp4"></video>
+          <span class="work-meta"><b>pexepo</b><span>0:50</span></span>
+        </button>
+        <button type="button" class="work w-b" data-work="kaory-01" data-author="kaory" data-dur="0:10">
+          <img src="/assets/works/kaory-01.jpg" alt="" loading="lazy" />
+          <video muted loop playsinline preload="none" data-src="/assets/works/kaory-01-loop.mp4"></video>
+          <span class="work-meta"><b>kaory</b><span>0:10</span></span>
+        </button>
+        <button type="button" class="work w-c" data-work="kaory-02" data-author="kaory" data-dur="0:15">
+          <img src="/assets/works/kaory-02.jpg" alt="" loading="lazy" />
+          <video muted loop playsinline preload="none" data-src="/assets/works/kaory-02-loop.mp4"></video>
+          <span class="work-meta"><b>kaory</b><span>0:15</span></span>
+        </button>
+        <button type="button" class="work w-d" data-work="pexepo-02" data-author="pexepo" data-dur="0:28">
+          <img src="/assets/works/pexepo-02.jpg" alt="" loading="lazy" />
+          <video muted loop playsinline preload="none" data-src="/assets/works/pexepo-02-loop.mp4"></video>
+          <span class="work-meta"><b>pexepo</b><span>0:28</span></span>
+        </button>
+        <button type="button" class="work w-e" data-work="kaory-03" data-author="kaory" data-dur="0:11">
+          <img src="/assets/works/kaory-03.jpg" alt="" loading="lazy" />
+          <video muted loop playsinline preload="none" data-src="/assets/works/kaory-03-loop.mp4"></video>
+          <span class="work-meta"><b>kaory</b><span>0:11</span></span>
+        </button>
+        <button type="button" class="work w-f" data-work="pexepo-03" data-author="pexepo" data-dur="0:30">
+          <img src="/assets/works/pexepo-03.jpg" alt="" loading="lazy" />
+          <video muted loop playsinline preload="none" data-src="/assets/works/pexepo-03-loop.mp4"></video>
+          <span class="work-meta"><b>pexepo</b><span>0:30</span></span>
+        </button>
+      </div>
+    </section>
+
     <section class="section" id="more" aria-labelledby="moreTitle" hidden>
       <h2 id="moreTitle" data-i18n="more.title"></h2>
       <div class="more-grid">
@@ -339,6 +383,31 @@
     </a>
   </footer>
 
+  <div class="player" id="player" hidden role="dialog" aria-modal="true" aria-labelledby="playerTitle">
+    <div class="player-scrim" data-close-player></div>
+    <div class="player-box">
+      <div class="player-top">
+        <span class="player-title" id="playerTitle"></span>
+        <span class="player-count" id="playerCount"></span>
+        <button type="button" class="pb player-x" data-close-player aria-label="Close">&#10005;</button>
+      </div>
+      <div class="player-stage" id="playerStage">
+        <video id="playerVideo" playsinline preload="metadata"></video>
+      </div>
+      <div class="player-bar">
+        <button type="button" class="pb" id="pPlay" aria-label="Play"></button>
+        <span class="ptc"><span id="pCur">00:00</span><i>/</i><span id="pDur">00:00</span></span>
+        <div class="pscrub" id="pScrub" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="pbuf" id="pBuf"></span><span class="pfill" id="pFill"></span><span class="phead" id="pHead"></span>
+        </div>
+        <button type="button" class="pb" id="pMute" data-i18n="player.sound"></button>
+        <button type="button" class="pb" id="pPrev" aria-label="Previous">&#8592;</button>
+        <button type="button" class="pb" id="pNext" aria-label="Next">&#8594;</button>
+        <button type="button" class="pb" id="pFull" data-i18n="player.full"></button>
+      </div>
+    </div>
+  </div>
+
   <div class="result-overlay success" id="done" hidden role="status" aria-live="polite">
     <div class="result-card">
       <video class="result-media" id="successMedia" muted playsinline preload="metadata">
@@ -368,7 +437,7 @@
     </div>
   </div>
 
-  <script src="/assets/app.js?v=20261031" defer></script>
+  <script src="/assets/app.js?v=20261101" defer></script>
   <script src="/assets/sky.js?v=20261031" defer></script>
 </body>
 </html>

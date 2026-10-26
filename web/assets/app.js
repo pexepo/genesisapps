@@ -8,6 +8,12 @@
 
   const I18N = {
     ru: {
+      "nav.works": "Работы",
+      "works.title": "Работы владельцев",
+      "works.all": "Все",
+      "player.sound": "Звук",
+      "player.muted": "Без звука",
+      "player.full": "Экран",
       "tc.halloween": "ДО ХЭЛЛОУИНА",
       "nav.owners": "Владельцы",
       "owners.title": "Кто стоит за юнитом",
@@ -130,6 +136,12 @@
       "error.rate": "Слишком много заявок. Подожди немного и попробуй позже."
     },
     en: {
+      "nav.works": "Work",
+      "works.title": "Owners' work",
+      "works.all": "All",
+      "player.sound": "Sound",
+      "player.muted": "Muted",
+      "player.full": "Full",
       "tc.halloween": "HALLOWEEN IN",
       "nav.owners": "Owners",
       "owners.title": "Who runs the unit",
@@ -922,6 +934,176 @@
       });
       xhr.send(data);
     });
+  })();
+
+  /* ---------------- owners' work: collage + player ---------------- */
+
+  (function initWorks() {
+    const grid = $("#worksGrid");
+    const player = $("#player");
+    if (!grid || !player) return;
+    const tiles = $$(".work", grid);
+    const video = $("#playerVideo");
+    const scrub = $("#pScrub");
+    const playBtn = $("#pPlay");
+    const muteBtn = $("#pMute");
+    let list = tiles.slice();
+    let index = 0;
+    let lastFocus = null;
+    let dragging = false;
+
+    function fmt(sec) {
+      if (!isFinite(sec)) sec = 0;
+      const m = Math.floor(sec / 60), s2 = Math.floor(sec % 60);
+      return (m < 10 ? "0" : "") + m + ":" + (s2 < 10 ? "0" : "") + s2;
+    }
+
+    // Filter chips: All / pexepo / kaory.
+    $$(".wf").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const f = btn.getAttribute("data-filter");
+        $$(".wf").forEach(function (b) {
+          const on = b === btn;
+          b.classList.toggle("is-active", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        tiles.forEach(function (tile) {
+          tile.hidden = f !== "all" && tile.getAttribute("data-author") !== f;
+        });
+        grid.setAttribute("data-filter", f);
+      });
+    });
+
+    // Hover previews: a 4 s muted loop, loaded only when first hovered.
+    const canHover = window.matchMedia && window.matchMedia("(hover: hover)").matches;
+    if (canHover && !reducedMotion) {
+      tiles.forEach(function (tile) {
+        const v = $("video", tile);
+        tile.addEventListener("pointerenter", function () {
+          if (!v.src) v.src = v.getAttribute("data-src");
+          v.play().then(function () { tile.classList.add("is-previewing"); }).catch(function () {});
+        });
+        tile.addEventListener("pointerleave", function () {
+          v.pause();
+          tile.classList.remove("is-previewing");
+        });
+      });
+    }
+
+    function paintPlay() {
+      const playing = !video.paused && !video.ended;
+      playBtn.textContent = playing ? "\u275A\u275A" : "\u25B6";
+      playBtn.setAttribute("aria-label", playing ? "Pause" : "Play");
+      player.classList.toggle("is-playing", playing);
+    }
+    function paintMute() {
+      muteBtn.textContent = t(video.muted ? "player.muted" : "player.sound");
+      muteBtn.classList.toggle("is-off", video.muted);
+    }
+    function paintTime() {
+      const d = video.duration || 0;
+      const pct = d ? (video.currentTime / d) * 100 : 0;
+      $("#pFill").style.width = pct + "%";
+      $("#pHead").style.left = pct + "%";
+      $("#pCur").textContent = fmt(video.currentTime);
+      scrub.setAttribute("aria-valuenow", String(Math.round(pct)));
+      if (video.buffered.length && d) {
+        $("#pBuf").style.width = (video.buffered.end(video.buffered.length - 1) / d) * 100 + "%";
+      }
+    }
+
+    function load(i) {
+      index = (i + list.length) % list.length;
+      const tile = list[index];
+      const slug = tile.getAttribute("data-work");
+      video.src = "/assets/works/" + slug + ".mp4";
+      video.poster = "/assets/works/" + slug + ".jpg";
+      $("#playerTitle").textContent = tile.getAttribute("data-author");
+      $("#playerCount").textContent = (index + 1) + " / " + list.length;
+      $("#pDur").textContent = tile.getAttribute("data-dur").padStart(5, "0");
+      paintTime();
+      video.play().catch(function () {});
+    }
+
+    function open(tile) {
+      list = tiles.filter(function (x) { return !x.hidden; });
+      lastFocus = document.activeElement;
+      player.hidden = false;
+      document.body.style.overflow = "hidden";
+      load(list.indexOf(tile));
+      paintMute();
+      $(".player-x", player).focus();
+    }
+    function close() {
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+      if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
+      player.hidden = true;
+      document.body.style.overflow = "";
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    tiles.forEach(function (tile) {
+      tile.setAttribute("aria-label", tile.getAttribute("data-author") + ", " + tile.getAttribute("data-dur"));
+      tile.addEventListener("click", function () { open(tile); });
+    });
+    $$("[data-close-player]", player).forEach(function (el) { el.addEventListener("click", close); });
+
+    function toggle() { if (video.paused || video.ended) video.play().catch(function () {}); else video.pause(); }
+    playBtn.addEventListener("click", toggle);
+    $("#playerStage").addEventListener("click", toggle);
+    muteBtn.addEventListener("click", function () { video.muted = !video.muted; paintMute(); });
+    $("#pPrev").addEventListener("click", function () { load(index - 1); });
+    $("#pNext").addEventListener("click", function () { load(index + 1); });
+    $("#pFull").addEventListener("click", function () {
+      const box = $(".player-box", player);
+      if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
+      else if (box.requestFullscreen) box.requestFullscreen().catch(function () {});
+      else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
+    });
+
+    ["play", "pause", "ended"].forEach(function (ev) { video.addEventListener(ev, paintPlay); });
+    ["timeupdate", "progress", "loadedmetadata"].forEach(function (ev) { video.addEventListener(ev, paintTime); });
+    video.addEventListener("loadedmetadata", function () { $("#pDur").textContent = fmt(video.duration); });
+    video.addEventListener("ended", function () { if (list.length > 1) load(index + 1); });
+
+    function seekAt(clientX) {
+      const r = scrub.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+      if (video.duration) video.currentTime = ratio * video.duration;
+      paintTime();
+    }
+    scrub.addEventListener("pointerdown", function (e) {
+      dragging = true;
+      scrub.setPointerCapture(e.pointerId);
+      seekAt(e.clientX);
+    });
+    scrub.addEventListener("pointermove", function (e) { if (dragging) seekAt(e.clientX); });
+    scrub.addEventListener("pointerup", function () { dragging = false; });
+
+    document.addEventListener("keydown", function (e) {
+      if (player.hidden) return;
+      const k = e.key;
+      if (k === "Escape") { close(); return; }
+      if (e.target && /^(BUTTON|A)$/.test(e.target.tagName) && (k === " " || k === "Enter")) return;
+      if (k === " " || k === "k") { e.preventDefault(); toggle(); }
+      else if (k === "ArrowRight") { e.preventDefault(); video.currentTime = Math.min(video.duration || 0, video.currentTime + 5); }
+      else if (k === "ArrowLeft") { e.preventDefault(); video.currentTime = Math.max(0, video.currentTime - 5); }
+      else if (k === "m") { video.muted = !video.muted; paintMute(); }
+      else if (k === "n") load(index + 1);
+      else if (k === "p") load(index - 1);
+      else if (k === "f") $("#pFull").click();
+      else if (k === "Tab") {
+        // Keep focus inside the dialog.
+        const f = $$("button, [tabindex='0']", player).filter(function (x) { return !x.hidden; });
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+
+    paintPlay();
   })();
 
   /* ---------------- owners (live Discord profiles) ---------------- */
